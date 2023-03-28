@@ -6,3 +6,12 @@
 @import "../node_modules/bootstrap/scss/bootstrap";
 
 // Then add additional custom code here
+
+.card {
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+.invalid-feedback {
+    display: block;
+}
