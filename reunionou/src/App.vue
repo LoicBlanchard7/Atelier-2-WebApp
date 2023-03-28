@@ -7,6 +7,8 @@
     <router-link to="/helloWorld">HelloWorld</router-link>
     |
     <router-link to='/signIn'>Connection</router-link>
+    |
+    <router-link to='/signUp'>Inscription</router-link>
   </nav>
 
   <router-view />
