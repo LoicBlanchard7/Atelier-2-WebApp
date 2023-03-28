@@ -1,9 +1,16 @@
 import { createRouter, createWebHistory } from "vue-router";
 import HelloWorld from '@/components/HelloWorld.vue';
 import NotFound from '@/components/NotFound.vue';
+import HomePage from '@/components/Home.vue';
+import SignIn from '@/components/SignIn.vue';
+
 
 const routes = [
-    { name: 'HelloWorld', path: '/', component: HelloWorld },
+    { name: 'Home', path: '/', component: HomePage },
+
+    { name: 'HelloWorld', path: '/helloWorld', component: HelloWorld },
+
+    { name: 'SignIn', path: '/signIn', component: SignIn },
 
     // A mettre à la fin de toutes les routes
     { name : 'notFound', path: '/:pathMatch(.*)', component: NotFound}
