@@ -72,11 +72,7 @@ export default {
                 this.errorMessage = 'Veuillez remplir tous les champs.';
                 return;
             } else {
-                // let account = {
-                //     name: this.name,
-                //     email: this.email,
-                //     password: this.password
-                // };
+                this.errorMessage = '';
 
                 await axios
                     .post(`http://iut.netlor.fr/auth/signup`, {
@@ -85,11 +81,9 @@ export default {
                         password: this.password
                     }).then(function (response) {
                         console.log(response.data);
-
-                        this.errorMessage = '';
+                        this.errorMessage = 'Le compte a été créé.';
                     }).catch(function (error) {
                         console.log(error);
-                        this.errorMessage = "Une erreur est survenue.";
                     });
 
                 this.resetForm();
