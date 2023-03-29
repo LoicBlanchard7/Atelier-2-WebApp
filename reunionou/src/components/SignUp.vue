@@ -32,7 +32,7 @@
                             <button type="button" class="btn btn-primary btn-block marginT"
                                 @click="addAccount()">S'inscrire</button>
 
-                            <br />
+                            <br/>
                             <small class="errorMessage marginT">{{ this.errorMessage }}</small>
                         </form>
                     </div>
@@ -72,10 +72,7 @@ export default {
                 this.errorMessage = 'Veuillez remplir tous les champs.';
                 return;
             } else {
-                this.errorMessage = '';
-
-                await axios
-                    .post(`http://iut.netlor.fr/auth/signup`, {
+                axios.post(`http://iut.netlor.fr/auth/signup`, {
                         name: this.name,
                         email: this.email,
                         password: this.password
@@ -84,6 +81,7 @@ export default {
                         this.errorMessage = 'Le compte a été créé.';
                     }).catch(function (error) {
                         console.log(error);
+                        this.errorMessage = "Une erreur est survenue.";
                     });
 
                 this.resetForm();
