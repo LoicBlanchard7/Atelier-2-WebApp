@@ -24,6 +24,7 @@
                             <br />
 
                             <small class="errorMessage marginT">{{ this.errorMessage }}</small>
+                            <small class="newAccountMessage marginT">{{ this.newAccountMessage }}</small>
                         </form>
                     </div>
                 </div>
@@ -44,6 +45,7 @@ export default {
             email: '',
             password: '',
             errorMessage: '',
+            newAccountMessage: ''
         }
     },
     computed: {
@@ -78,6 +80,11 @@ export default {
         resetForm() {
             this.email = '';
             this.password = '';
+        }
+    },
+    created() {
+        if(this.$route.query.context === "newAccount") {
+            this.newAccountMessage = "Votre compte a bien été créé. Vous pouvez maintenant vous connecter.";
         }
     }
 }

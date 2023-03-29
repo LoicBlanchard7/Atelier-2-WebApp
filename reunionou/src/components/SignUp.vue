@@ -67,7 +67,7 @@ export default {
         }
     },
     methods: {
-        async addAccount() {
+        addAccount() {
             if (this.name === '' || this.email === '' || this.password === '' || this.password.length < 8) {
                 this.errorMessage = 'Veuillez remplir tous les champs.';
                 return;
@@ -76,22 +76,23 @@ export default {
                         name: this.name,
                         email: this.email,
                         password: this.password
-                    }).then(function (response) {
+                    }).then(response =>{
                         console.log(response.data);
-                        this.errorMessage = 'Le compte a été créé.';
-                    }).catch(function (error) {
-                        console.log(error);
-                        this.errorMessage = "Une erreur est survenue.";
+                        this.resetForm();
+                        this.errorMessage = '';
+                        this.$router.push({name: "SignIn", path: 'SignIn' , query: { context: 'newAccount' }});
+                    }).catch(e =>{
+                        if(e.request.status === 409)
+                            this.errorMessage = `L'adresse e-mail est déjà utilisée.`;
+                        else
+                            this.errorMessage = `Une erreur est survenue.`;
                     });
-
-                this.resetForm();
             }
         },
         resetForm() {
             this.name = '';
             this.email = '';
             this.password = '';
-            this.numPassword = 0;
         }
     },
     components: {},
