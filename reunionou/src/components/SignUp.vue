@@ -30,7 +30,9 @@
                             </div>
 
                             <button type="button" class="btn btn-primary btn-block marginT"
-                                @click="addAccount()">S'inscrire</button><br />
+                                @click="addAccount()">S'inscrire</button>
+                                
+                            <br/>
                             <small class="errorMessage marginT">{{ this.errorMessage }}</small>
                         </form>
                     </div>
@@ -83,7 +85,7 @@ export default {
                         password: this.password
                     });
 
-                    console.log(user);
+                    console.log(user.data);
                     this.errorMessage = '';
 
                 } catch (err) {
