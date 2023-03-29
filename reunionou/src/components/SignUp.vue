@@ -8,10 +8,9 @@
                     </div>
                     <div class="card-body">
                         <form @submit.prevent="login">
-
                             <div class="form-group">
                                 <label for="name">Nom :</label>
-                                <input type="password" class="form-control" id="name" v-model="name" required>
+                                <input type="text" class="form-control" id="name" v-model="name" required>
                             </div>
 
                             <div class="form-group">
@@ -30,9 +29,9 @@
                                 </div>
                             </div>
 
-                            <button type="button" class="btn btn-primary btn-block"
+                            <button type="button" class="btn btn-primary btn-block marginT"
                                 @click="addAccount()">S'inscrire</button><br />
-                            <small>{{ this.message }}</small>
+                            <small class="errorMessage marginT">{{ this.errorMessage }}</small>
                         </form>
                     </div>
                 </div>
@@ -41,6 +40,7 @@
     </div>
 </template>
 <script>
+import axios from "axios";
 import "../../scss/custom.scss";
 
 export default {
@@ -50,7 +50,7 @@ export default {
             name: '',
             email: '',
             password: '',
-            message: ''
+            errorMessage: ''
         };
     },
     computed: {
@@ -65,17 +65,31 @@ export default {
         }
     },
     methods: {
-        addAccount() {
+        async addAccount() {
             if (this.name === '' || this.email === '' || this.password === '' || this.password.length < 8) {
-                this.message = 'Veuillez remplir tous les champs';
+                this.errorMessage = 'Veuillez remplir tous les champs.';
                 return;
             } else {
-                let account = {
-                    name: this.name,
-                    email: this.email,
-                    password: this.password
-                };
-                console.log(account);
+                // let account = {
+                //     name: this.name,
+                //     email: this.email,
+                //     password: this.password
+                // };
+
+                try {
+                    const user = await axios.post(`http://iut.netlor.fr/auth/signup`, {
+                        name: this.name,
+                        email: this.email,
+                        password: this.password
+                    });
+
+                    console.log(user);
+                    this.errorMessage = '';
+
+                } catch (err) {
+                    this.errorMessage = "Une erreur est survenue.";
+                }
+
                 this.resetForm();
             }
         },

@@ -19,7 +19,9 @@
                                 <label for="password">Mot de passe :</label>
                                 <input type="password" class="form-control" id="password" v-model="password" required>
                             </div>
-                            <button type="submit" class="btn btn-primary btn-block">Se connecter</button>
+                            <button type="submit" class="btn btn-primary btn-block marginT">Se connecter</button>
+
+                            <small class="errorMessage marginT">{{ this.errorMessage }}</small>
                         </form>
                     </div>
                 </div>
@@ -38,7 +40,8 @@ export default {
     data() {
         return {
             email: '',
-            password: ''
+            password: '',
+            errorMessage: '',
         }
     },
     computed: {
@@ -54,13 +57,27 @@ export default {
             }
 
             // Cors
-            const user = await axios
-            .post(`http://iut.netlor.fr/auth/signin`, {
-                email : this.email,
-                password : this.password
-            });
+            try {
+                const user = await axios
+                    .post(`http://iut.netlor.fr/auth/signin`, {
+                        email: this.email,
+                        password: this.password
+                    });
+                console.log(user.data);
 
-            console.log(user);
+                this.errorMessage = '';
+            } catch (err) {
+                console.log("Machin");
+                console.log(err);
+                this.errorMessage = "L'adresse mail ou le mot de passe est incorrecte.";
+            }
+
+            this.resetForm();
+
+        },
+        resetForm() {
+            this.email = '';
+            this.password = '';
         }
     }
 }
