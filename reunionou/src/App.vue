@@ -9,6 +9,8 @@
     <router-link to='/signIn'>Connection</router-link>
     |
     <router-link to='/signUp'>Inscription</router-link>
+    |
+    <router-link to='/createEvent'>Créer event</router-link>
   </nav>
 
   <router-view />

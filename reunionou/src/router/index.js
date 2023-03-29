@@ -4,7 +4,7 @@ import NotFound from '@/components/NotFound.vue';
 import HomePage from '@/components/Home.vue';
 import SignIn from '@/components/SignIn.vue';
 import SignUp from '@/components/SignUp.vue';
-
+import CreateEvent from '@/components/CreateEvent.vue';
 
 const routes = [
     { name: 'Home', path: '/', component: HomePage },
@@ -14,6 +14,9 @@ const routes = [
     { name: 'SignIn', path: '/signIn', component: SignIn },
 
     { name: 'SignUp', path: '/signUp', component: SignUp },
+
+    { name: 'CreateEvent', path: '/createEvent', component: CreateEvent },
+
 
     // A mettre à la fin de toutes les routes
     { name : 'notFound', path: '/:pathMatch(.*)', component: NotFound}
