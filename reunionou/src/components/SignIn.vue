@@ -21,8 +21,8 @@
                             </div>
                             <button type="submit" class="btn btn-primary btn-block marginT">Se connecter</button>
 
-                            <br/>
-                            
+                            <br />
+
                             <small class="errorMessage marginT">{{ this.errorMessage }}</small>
                         </form>
                     </div>
@@ -58,21 +58,18 @@ export default {
                 return;
             }
 
-            // Cors
-            try {
-                const user = await axios
-                    .post(`http://iut.netlor.fr/auth/signin`, {
-                        email: this.email,
-                        password: this.password
-                    });
-                console.log(user.data);
+            await axios
+                .post(`http://iut.netlor.fr/auth/signin`, {
+                    email: this.email,
+                    password: this.password
+                }).then(function (response) {
+                    console.log(response.data);
 
-                this.errorMessage = '';
-            } catch (err) {
-                console.log("Machin");
-                console.log(err);
-                this.errorMessage = "L'adresse mail ou le mot de passe est incorrecte.";
-            }
+                    this.errorMessage = '';
+                }).catch(function (error) {
+                    console.log(error);
+                    this.errorMessage = "L'adresse mail ou le mot de passe est incorrecte.";
+                });
 
             this.resetForm();
 

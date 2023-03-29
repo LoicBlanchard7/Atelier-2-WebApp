@@ -31,8 +31,8 @@
 
                             <button type="button" class="btn btn-primary btn-block marginT"
                                 @click="addAccount()">S'inscrire</button>
-                                
-                            <br/>
+
+                            <br />
                             <small class="errorMessage marginT">{{ this.errorMessage }}</small>
                         </form>
                     </div>
@@ -78,19 +78,19 @@ export default {
                 //     password: this.password
                 // };
 
-                try {
-                    const user = await axios.post(`http://iut.netlor.fr/auth/signup`, {
+                await axios
+                    .post(`http://iut.netlor.fr/auth/signup`, {
                         name: this.name,
                         email: this.email,
                         password: this.password
+                    }).then(function (response) {
+                        console.log(response.data);
+
+                        this.errorMessage = '';
+                    }).catch(function (error) {
+                        console.log(error);
+                        this.errorMessage = "Une erreur est survenue.";
                     });
-
-                    console.log(user.data);
-                    this.errorMessage = '';
-
-                } catch (err) {
-                    this.errorMessage = "Une erreur est survenue.";
-                }
 
                 this.resetForm();
             }
@@ -99,7 +99,6 @@ export default {
             this.name = '';
             this.email = '';
             this.password = '';
-            this.message = '';
             this.numPassword = 0;
         }
     },
