@@ -20,10 +20,6 @@
                                 <textarea class="form-control" id="form-control" rows="3" v-model="description"></textarea>
                             </div>
                             <div class="mb-3">
-                                <label for="lieu" class="form-label">Lieu</label>
-                                <textarea class="form-control" id="form-control" rows="1" v-model="lieu"></textarea>
-                            </div>
-                            <div class="mb-3">
                                 <label for="date" class="form-label">Date de l'événement</label>
                                 <input type="date" class="form-control" id="date" v-model="date">
                             </div>
@@ -41,36 +37,20 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-6 marginTMap">
                 <h2>Choisissez un point de rendez-vous</h2>
-
-                <l-map ref="map" @ready="doSomethingOnReady()" class="map" v-model:center="center" v-model:zoom="zoom"
-                    :max-zoom="maxZoom" :min-zoom="minZoom" :zoom-control="false">
-
-                    <l-tile-layer :url="osmUrl" />
-
-                    <l-marker v-for="marker in markers" :key="marker.id" :lat-lng="marker.coordinates" />
-
-                </l-map>
-
+                <div ref="map" class="map"></div>
             </div>
         </div>
     </div>
 </template>
 
 <script>
-import 'leaflet/dist/leaflet.css';
-import { LMap, LTileLayer, LMarker } from "@vue-leaflet/vue-leaflet";
+import mapboxgl from 'mapbox-gl';
 import NavBar from './NavBar.vue';
-
 export default {
     name: 'CreateEvent',
-    components: {
-        NavBar,
-        LMap,
-        LTileLayer,
-        LMarker,
-    },
+    components: {NavBar},
 
     data() {
         return {
@@ -79,53 +59,64 @@ export default {
             description: '',
             date: '',
             time: '',
-            position: null,
-            osmUrl: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-            center: [48.6937223, 6.1792289],
-            zoom: 14,
-            markers: [
-                { id: 1, coordinates: [48.6964074, 6.1792289] },
-                { id: 2, coordinates: [48.6844, 6.185] },
-                { id: 3, coordinates: [48.6935244, 6.1832861] }
-            ],
-            minZoom: 0,
-            maxZoom: 19,
-            map: null,
+            lattitude: null,
+            longitude: null,
             errorMessage: '',
             newAccountMessage: ''
         };
     },
 
+    mounted() {
+        mapboxgl.accessToken = 'pk.eyJ1IjoibG9sb2F0ZWxpZXIiLCJhIjoiY2xmdjRqYXl3MDNvNzNjczZoY281cnhyayJ9.aE6a7BJ_XrBE8m9oWUAw7g';
+
+        const map = new mapboxgl.Map({
+            container: this.$refs.map,
+            style: 'mapbox://styles/mapbox/streets-v11',
+            center: [6.1792289, 48.6937223],
+            zoom: 13,
+        });
+
+        // Ajouter un marqueur
+        const marker = new mapboxgl.Marker().setLngLat([this.longitude, this.lattitude]).addTo(map);
+
+        map.on('click', (event) => {
+            const { lng, lat } = event.lngLat;
+            this.lattitude = lat;
+            this.longitude = lng;
+            marker.setLngLat([this.longitude, this.lattitude]).addTo(map);
+        });
+    },
+
     methods: {
-        doSomethingOnReady() {
-            this.map = this.$refs.map.mapObject // work as expected
-
-            console.log(this.map);
-        },
-
         createEvent() {
-            if (this.title != '' && this.description != '' && this.lieu != '' && this.date != '' && this.time != '') {
+            if (this.title != '' && this.description != '' && this.lattitude != null && this.longitude != null && this.date != '' && this.time != '') {
                 let event = {
                     title: this.title,
                     description: this.description,
-                    lieu: this.lieu,
                     date: this.date,
                     time: this.time,
+                    posX: this.lattitude,
+                    posY: this.longitude
                 };
 
                 console.log(event);
+                this.errorMessage = '';
                 this.newAccountMessage = "Evènement créé.";
+
+                this.resetForm();
             } else {
-                this.errorMessage = "Veuillez remplir les champs correctement.";
+                this.newAccountMessage = '';
+                this.errorMessage = "Veuillez remplir les champs correctement ou ajouter un point sur la carte.";
             }
         },
 
         resetForm() {
             this.title = '';
             this.description = '';
-            this.lieu = '';
             this.date = '';
             this.time = '';
+            this.lattitude = null;
+            this.longitude = null;
         }
     },
 };
