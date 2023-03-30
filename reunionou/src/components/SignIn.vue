@@ -1,4 +1,6 @@
 <template>
+      <NavBar/>
+
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-6">
@@ -25,6 +27,7 @@
 
                             <small class="errorMessage marginT">{{ this.errorMessage }}</small>
                             <small class="newAccountMessage marginT" >{{ newAccount }}</small>
+                            <small class="newAccountMessage marginT" >{{ goodDeco }}</small>
                         </form>
                     </div>
                 </div>
@@ -36,23 +39,26 @@
 <script>
 import axios from 'axios';
 import "../../scss/custom.scss";
-import { mapState } from 'vuex'
+import { mapState } from 'vuex';
+import NavBar from './NavBar.vue';
 
 export default {
     name: 'SignIn',
-    components: {},
+    components: {NavBar},
     data() {
         return {
             email: '',
             password: '',
             errorMessage: '',
-            newAccountMessage: ''
         }
     },
     computed: {
-        ...mapState(['account']),
+        ...mapState(['account','deco']),
         newAccount() {
             return this.account;
+        },
+        goodDeco() {
+            return this.deco;
         },
         isValidEmail() {
             const validEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -70,9 +76,8 @@ export default {
                         email: this.email,
                         password: this.password
                     });
-                console.log(user.data);
                 this.errorMessage = '';
-                this.$store.commit('connectAccount', user.data);
+                sessionStorage.setItem('account', JSON.stringify(user.data));
                 this.$router.push({ name: 'Home' });
             } catch (err) {
                 console.log(err);
@@ -86,10 +91,5 @@ export default {
             this.password = '';
         }
     },
-    created() {
-        if(this.$route.query.context === "newAccount") {
-            this.newAccountMessage = "Votre compte a bien été créé. Vous pouvez maintenant vous connecter.";
-        }
-    }
 }
 </script>

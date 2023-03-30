@@ -1,38 +1,50 @@
 <template>
+      <NavBar/>
+
     <div class="container">
-        <div>
+        <div v-if="!isConnected">
+            <h3>Réunionou</h3>
+            <p>Bienvenue sur Réunionnou, veuillez vous connecté.</p>
+        </div>
+        <div v-else>
             <p>Bienvenue sur Réunionnou, vous êtes connecté.</p>
             <p>Identifiant : {{ this.userUid }}</p>
         </div>
     </div>
 </template>
 <script>
-//import axios from 'axios';
 import "../../scss/custom.scss";
-import { mapState } from 'vuex'
-
+import NavBar from './NavBar.vue';
 export default {
     name: 'HomePage',
-    components: {},
+    components: {NavBar},
     data() {
         return {
-            userUid: "",
-            userToken: "",
-            userRefresh: "",
+            uid: "",
+            token: "",
+            refresh: "",
         }
     },
     computed: {
-        ...mapState(['uid','token','refresh']),
-    },
-    methods: {
-        connectAccount() {
-            this.userUid = this.uid;
-            this.userToken = this.token;
-            this.userRefresh = this.refresh;
+        isConnected() {
+            let acc = JSON.parse(sessionStorage.getItem('account'));
+            if(acc !== null){
+                return true;
+            }else{
+                return false;
+            }
         }
     },
+    methods: {
+        
+    },
     created() {
-        this.connectAccount();
+        let acc = JSON.parse(sessionStorage.getItem('account'));
+        if(acc !== null){
+            this.userUid = acc.uid;
+            this.userToken = acc.access_token;
+            this.userRefresh = acc.refresh_token;
+        }
     }
 }
 </script>

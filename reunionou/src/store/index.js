@@ -4,19 +4,18 @@ import { createStore } from 'vuex'
 const store = createStore({
   state() {
     return {
-      token: '',
-      uid: '',
-      refresh: ''
+      account: null,
+      deco: null
     }
   },
   mutations: {
-    connectAccount(state, account) {
-      state.uid = account.uid;
-      state.token = account.access_token;
-      state.refresh = account.refresh_token;
-    },
     newAccount(state, newAccount) {
       state.account = newAccount
+      state.deco = ""
+    },
+    deconnect(state, deconnect) {
+      state.deco = deconnect
+      state.account = ""
     }
   }
 })

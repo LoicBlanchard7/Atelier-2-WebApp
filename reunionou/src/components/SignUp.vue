@@ -1,4 +1,5 @@
 <template>
+      <NavBar/>
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-6">
@@ -11,6 +12,11 @@
                             <div class="form-group">
                                 <label for="name">Nom :</label>
                                 <input type="text" class="form-control" id="name" v-model="name" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="name">Prénom :</label>
+                                <input type="text" class="form-control" id="name" v-model="firstname" required>
                             </div>
 
                             <div class="form-group">
@@ -44,12 +50,15 @@
 <script>
 import axios from "axios";
 import "../../scss/custom.scss";
+import NavBar from './NavBar.vue';
 
 export default {
     name: 'SignUp',
+    components: {NavBar},
     data() {
         return {
             name: '',
+            firstname: '',
             email: '',
             password: '',
             errorMessage: ''
@@ -68,19 +77,20 @@ export default {
     },
     methods: {
         addAccount() {
-            if (this.name === '' || this.email === '' || this.password === '' || this.password.length < 8) {
+            if (this.name === '' || this.email === '' || this.password === '' || this.firstname === '' || this.password.length < 8) {
                 this.errorMessage = 'Veuillez remplir tous les champs.';
                 return;
             } else {
                 axios.post(`http://iut.netlor.fr/auth/signup`, {
                         name: this.name,
+                        firstname: this.firstname,
                         email: this.email,
                         password: this.password
                     }).then(response =>{
                         console.log(response.data);
                         this.resetForm();
                         this.errorMessage = '';
-                        this.$store.commit('newAccount', 'Votre compte a bien été créé. Veuillez vous connecter.');
+                        this.$store.commit('newAccount', 'Votre compte a bien été créé. Vous pouvez maintenant vous connecter.');
                         this.$router.push({name: "SignIn", path: 'SignIn'});
                     }).catch(e =>{
                         if(e.request.status === 409)
@@ -96,6 +106,5 @@ export default {
             this.password = '';
         }
     },
-    components: {},
 };
 </script>

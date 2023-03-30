@@ -1,4 +1,6 @@
 <template>
+      <NavBar/>
+
     <div class="container">
         <div class="row">
             <div class="col-md-6">
@@ -59,10 +61,12 @@
 <script>
 import 'leaflet/dist/leaflet.css';
 import { LMap, LTileLayer, LMarker } from "@vue-leaflet/vue-leaflet";
+import NavBar from './NavBar.vue';
 
 export default {
     name: 'CreateEvent',
     components: {
+        NavBar,
         LMap,
         LTileLayer,
         LMarker,
@@ -123,10 +127,6 @@ export default {
             this.date = '';
             this.time = '';
         }
-
-
-
-
     },
 };
 </script>

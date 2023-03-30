@@ -1,4 +1,6 @@
 <template>
+      <NavBar/>
+
     <h2>Page inexistante</h2>
     <p>La page que vous avez demandé n'existe pas.</p>
 
@@ -11,8 +13,10 @@
 </template>
 
 <script>
+import NavBar from './NavBar.vue';
 export default {
     name: 'NotFound',
+    components: {NavBar},
 }
 </script>
 
