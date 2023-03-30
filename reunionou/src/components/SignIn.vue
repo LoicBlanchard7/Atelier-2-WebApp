@@ -52,14 +52,13 @@ export default {
         isValidEmail() {
             const validEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
             return validEmail.test(this.email);
-        }
+        },  
     },
     methods: {
         async login() {
             if (!this.isValidEmail) {
                 return;
             }
-
             try {
                 const user = await axios
                     .post(`http://iut.netlor.fr/auth/signin`, {
@@ -68,12 +67,11 @@ export default {
                     });
                 console.log(user.data);
                 this.errorMessage = '';
+                this.$store.commit('setToken', 'token')
             } catch (err) {
                 console.log(err);
                 this.errorMessage = "L'adresse mail ou le mot de passe est incorrecte.";
             }
-
-
             this.resetForm();
 
         },
