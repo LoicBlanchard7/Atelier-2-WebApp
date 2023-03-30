@@ -80,7 +80,8 @@ export default {
                         console.log(response.data);
                         this.resetForm();
                         this.errorMessage = '';
-                        this.$router.push({name: "SignIn", path: 'SignIn' , query: { context: 'newAccount' }});
+                        this.$store.commit('newAccount', 'Votre compte a bien été créé. Veuillez vous connecter.');
+                        this.$router.push({name: "SignIn", path: 'SignIn'});
                     }).catch(e =>{
                         if(e.request.status === 409)
                             this.errorMessage = `L'adresse e-mail est déjà utilisée.`;

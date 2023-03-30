@@ -5,9 +5,12 @@ import HomePage from '@/components/Home.vue';
 import SignIn from '@/components/SignIn.vue';
 import SignUp from '@/components/SignUp.vue';
 import CreateEvent from '@/components/CreateEvent.vue';
+import Welcome from '@/components/Welcome.vue';
 
 const routes = [
-    { name: 'Home', path: '/', component: HomePage },
+    { name: 'Welcome', path: '/', component: Welcome},
+
+    { name: 'Home', path: '/home', component: HomePage },
 
     { name: 'HelloWorld', path: '/helloWorld', component: HelloWorld },
 

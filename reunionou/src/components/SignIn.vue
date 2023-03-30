@@ -24,7 +24,7 @@
                             <br />
 
                             <small class="errorMessage marginT">{{ this.errorMessage }}</small>
-                            <small class="newAccountMessage marginT">{{ this.newAccountMessage }}</small>
+                            <small class="newAccountMessage marginT" >{{ newAccount }}</small>
                         </form>
                     </div>
                 </div>
@@ -36,6 +36,7 @@
 <script>
 import axios from 'axios';
 import "../../scss/custom.scss";
+import { mapState } from 'vuex'
 
 export default {
     name: 'SignIn',
@@ -49,6 +50,10 @@ export default {
         }
     },
     computed: {
+        ...mapState(['account']),
+        newAccount() {
+            return this.account;
+        },
         isValidEmail() {
             const validEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
             return validEmail.test(this.email);
@@ -67,7 +72,8 @@ export default {
                     });
                 console.log(user.data);
                 this.errorMessage = '';
-                this.$store.commit('setToken', 'token')
+                this.$store.commit('connectAccount', user.data);
+                this.$router.push({ name: 'Home' });
             } catch (err) {
                 console.log(err);
                 this.errorMessage = "L'adresse mail ou le mot de passe est incorrecte.";
