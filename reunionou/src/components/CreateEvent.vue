@@ -1,5 +1,5 @@
 <template>
-      <NavBar/>
+    <NavBar />
 
     <div class="container">
         <div class="row">
@@ -9,7 +9,6 @@
                         <h3 class="text-center">Créer un événement</h3>
                     </div>
                     <div class="card-body">
-
                         <form @submit.prevent="createEvent">
                             <div class="mb-3">
                                 <label for="title" class="form-label">Titre de l'événement</label>
@@ -40,17 +39,27 @@
             <div class="col-md-6 marginTMap">
                 <h2>Choisissez un point de rendez-vous</h2>
                 <div ref="map" class="map"></div>
+                <form @submit.prevent="onSubmit">
+                    <div class="mb-3">
+                        <input type="text" class="form-control" id="address" v-model="address"
+                            placeholder="Entrez une adresse">
+                        <button type="submit" class="btn btn-primary">Ajouter une adresse</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
 </template>
 
 <script>
+import axios from 'axios';
 import mapboxgl from 'mapbox-gl';
 import NavBar from './NavBar.vue';
+import MapboxClient from '@mapbox/mapbox-sdk/services/geocoding';
+
 export default {
     name: 'CreateEvent',
-    components: {NavBar},
+    components: { NavBar },
 
     data() {
         return {
@@ -62,14 +71,17 @@ export default {
             lattitude: null,
             longitude: null,
             errorMessage: '',
-            newAccountMessage: ''
+            newAccountMessage: '',
+            marker: null,
+            address: '',
         };
     },
 
     mounted() {
+
         mapboxgl.accessToken = 'pk.eyJ1IjoibG9sb2F0ZWxpZXIiLCJhIjoiY2xmdjRqYXl3MDNvNzNjczZoY281cnhyayJ9.aE6a7BJ_XrBE8m9oWUAw7g';
 
-        const map = new mapboxgl.Map({
+        this.map = new mapboxgl.Map({
             container: this.$refs.map,
             style: 'mapbox://styles/mapbox/streets-v11',
             center: [6.1792289, 48.6937223],
@@ -77,37 +89,71 @@ export default {
         });
 
         // Ajouter un marqueur
-        const marker = new mapboxgl.Marker().setLngLat([this.longitude, this.lattitude]).addTo(map);
+        this.marker = new mapboxgl.Marker().setLngLat([this.longitude, this.lattitude]).addTo(this.map);
 
-        map.on('click', (event) => {
+        this.map.on('click', (event) => {
             const { lng, lat } = event.lngLat;
             this.lattitude = lat;
             this.longitude = lng;
-            marker.setLngLat([this.longitude, this.lattitude]).addTo(map);
+            this.marker.setLngLat([this.longitude, this.lattitude]).addTo(this.map);
         });
+
     },
 
     methods: {
-        createEvent() {
+        async createEvent() {
             if (this.title != '' && this.description != '' && this.lattitude != null && this.longitude != null && this.date != '' && this.time != '') {
-                let event = {
-                    title: this.title,
-                    description: this.description,
-                    date: this.date,
-                    time: this.time,
-                    posX: this.lattitude,
-                    posY: this.longitude
-                };
+                let acc = JSON.parse(sessionStorage.getItem('account'));
 
-                console.log(event);
-                this.errorMessage = '';
-                this.newAccountMessage = "Evènement créé.";
+                try {
+                    const event = await axios
+                        .post(`http://iut.netlor.fr/event/createEvent`, {
+                            title: this.title,
+                            description: this.description,
+                            date: this.date.toString() + " " + this.time.toString(),
+                            posX: this.lattitude,
+                            posY: this.longitude,
+                            uid: acc.uid,
+                        }, {
+                            headers: { Authorization: `Bearer ${acc.access_token}` }
+                        });
 
-                this.resetForm();
+                    this.errorMessage = '';
+                    this.newAccountMessage = "Evènement créé.";
+                    this.resetForm();
+
+                } catch (err) {
+                    console.log(err);
+                    this.newAccountMessage = "";
+                    this.errorMessage = "Une erreur ?";
+                }
             } else {
                 this.newAccountMessage = '';
                 this.errorMessage = "Veuillez remplir les champs correctement ou ajouter un point sur la carte.";
             }
+        },
+
+        async addMarkerFromAddress(address) {
+
+            const client = MapboxClient({ accessToken: 'pk.eyJ1IjoibG9sb2F0ZWxpZXIiLCJhIjoiY2xmdjRqYXl3MDNvNzNjczZoY281cnhyayJ9.aE6a7BJ_XrBE8m9oWUAw7g' });
+
+            const response = await client.forwardGeocode({
+                query: address,
+                limit: 1,
+            }).send();
+
+            const { center } = response.body.features[0];
+
+            if (!this.marker) {
+                this.marker = new mapboxgl.Marker().setLngLat(center).addTo(this.map);
+            } else {
+                this.marker.setLngLat(center);
+            }
+
+            this.map.flyTo({ center });
+        },
+        onSubmit() {
+            this.addMarkerFromAddress(this.address);
         },
 
         resetForm() {
