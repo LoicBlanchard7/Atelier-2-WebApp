@@ -5,13 +5,15 @@
     <h1>A propos</h1>
     
   </div>
+  <Footer/>
 </template>
 <script>
 import "../../scss/custom.scss";
 import NavBar from './NavBar.vue';
+import Footer from './Footer.vue';
 export default {
   name: 'AboutPage',
-  components: {NavBar},
+  components: {NavBar,Footer},
 }
 </script>
 

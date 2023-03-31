@@ -14,9 +14,6 @@
 
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-          <li class="nav-item">
-            <router-link class="nav-link" to="/About">A propos</router-link>
-          </li>
 
           <li class="nav-item" v-if:="isConnect">
             <router-link class="nav-link" to="/createEvent">Créer événement</router-link>
@@ -41,6 +38,7 @@
   </nav>
 </template>
 <script>
+import "../../scss/custom.scss";
 export default {
   name: 'NavBar',
   computed: {
@@ -62,3 +60,6 @@ export default {
   }
 }
 </script>
+<style lang="scss" scoped>
+
+</style>

@@ -49,17 +49,21 @@
             </div>
         </div>
     </div>
+    <Footer/>
+
 </template>
 
 <script>
 import axios from 'axios';
+import "../../scss/custom.scss";
 import mapboxgl from 'mapbox-gl';
 import NavBar from './NavBar.vue';
+import Footer from './Footer.vue';
 import MapboxClient from '@mapbox/mapbox-sdk/services/geocoding';
 
 export default {
     name: 'CreateEvent',
-    components: { NavBar },
+    components: { NavBar,Footer },
 
     data() {
         return {
@@ -167,3 +171,6 @@ export default {
     },
 };
 </script>
+<style lang="scss" scoped>
+
+</style>
