@@ -37,7 +37,6 @@
     <Footer/>
 </template>
 <script>
-import "../../scss/custom.scss";
 import NavBar from './NavBar.vue';
 import axios from 'axios';
 import Footer from './Footer.vue';
@@ -115,7 +114,7 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
+<style scoped>
 
 </style>
 

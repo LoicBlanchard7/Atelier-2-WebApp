@@ -6,7 +6,7 @@
     </div>
 </template>
 <script>
-import "../../scss/custom.scss";
+
 
 export default {
   name: 'FooterElement',
@@ -18,6 +18,6 @@ export default {
   }
 }
 </script>
-<style lang="scss" scoped>
+<style>
 
 </style>

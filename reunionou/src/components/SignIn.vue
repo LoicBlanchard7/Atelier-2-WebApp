@@ -40,7 +40,6 @@
 
 <script>
 import axios from 'axios';
-import "../../scss/custom.scss";
 import { mapState } from 'vuex';
 import NavBar from './NavBar.vue';
 import Footer from './Footer.vue';
@@ -108,6 +107,6 @@ export default {
     },
 }
 </script>
-<style lang="scss" scoped>
+<style>
 
 </style>

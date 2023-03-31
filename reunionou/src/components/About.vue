@@ -8,7 +8,6 @@
   <Footer/>
 </template>
 <script>
-import "../../scss/custom.scss";
 import NavBar from './NavBar.vue';
 import Footer from './Footer.vue';
 export default {
@@ -17,7 +16,7 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
+<style>
 
 </style>
 

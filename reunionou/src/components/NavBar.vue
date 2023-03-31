@@ -3,7 +3,7 @@
     <div class="container-fluid">
       <ul class="navbar-nav me-auto">
         <li class="navbar-brand">
-          <router-link class="nav-link" to="/">Reunionou</router-link>
+          <router-link class="nav-link " to="/">Reunionou</router-link>
         </li>
       </ul>
 
@@ -14,13 +14,19 @@
 
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-
+          <li class="nav-item" v-if:="isConnect">
+            <router-link class="nav-link" to="/Profil">Profil</router-link>
+          </li>
           <li class="nav-item" v-if:="isConnect">
             <router-link class="nav-link" to="/createEvent">Créer événement</router-link>
           </li>
         </ul>
 
         <ul class="navbar-nav">
+          
+          <li class="nav-item" v-if="isConnect">
+            <router-link class="nav-link" to="/signIn" @click="deconnect()">Déconnection</router-link>
+          </li>
           <li class="nav-item" v-if="!isConnect">
             <router-link class="nav-link" to="/signIn">Connexion</router-link>
           </li>
@@ -28,17 +34,12 @@
           <li class="nav-item" v-if="!isConnect">
             <router-link class="nav-link" to="/signUp">Inscription</router-link>
           </li>
-
-          <li class="nav-item" v-if="isConnect">
-            <router-link class="nav-link" to="/signIn" @click="deconnect()">Déconnection</router-link>
-          </li>
         </ul>
       </div>
     </div>
   </nav>
 </template>
 <script>
-import "../../scss/custom.scss";
 export default {
   name: 'NavBar',
   computed: {
@@ -60,6 +61,6 @@ export default {
   }
 }
 </script>
-<style lang="scss" scoped>
+<style>
 
 </style>

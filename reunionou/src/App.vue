@@ -3,20 +3,14 @@
 </template>
 
 <script>
-
+import './assets/custom.scss';
 export default {
   name: 'App',
   components: {},
-  computed: {
-    
-  },
-  methods: {
-    
-  }
 }
 </script>
 
-<style>
+<style lang="scss" scoped>
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
