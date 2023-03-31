@@ -94,7 +94,8 @@ export default {
                     .get(`http://iut.netlor.fr/auth/userId/`+uid);
                 let names = {
                     firstname: user.data.user.firstname,
-                    name: user.data.user.name};
+                    name: user.data.user.name,
+                    email: user.data.user.email};
                 return names;
             } catch (err) {
                 console.log(err);
