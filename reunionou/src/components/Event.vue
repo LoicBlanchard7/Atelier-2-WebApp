@@ -113,10 +113,11 @@
 import axios from 'axios';
 import NavBar from './NavBar.vue';
 import mapboxgl from 'mapbox-gl';
+import Footer from './Footer.vue';
 
 export default {
     name: 'EventPage',
-    components: { NavBar },
+    components: { NavBar, Footer },
 
     data() {
         return {

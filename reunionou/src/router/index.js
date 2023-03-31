@@ -8,7 +8,6 @@ import CreateEvent from '@/components/CreateEvent.vue';
 import Profil from '@/components/Profil.vue';
 import Event from '@/components/Event.vue';
 
-
 const routes = [
 
     { name: 'Home', path: '/', component: HomePage },
@@ -22,6 +21,7 @@ const routes = [
     { name: 'CreateEvent', path: '/createEvent', component: CreateEvent },
 
     { name: 'Profil', path: '/profil', component: Profil},
+
     { name: 'Event', path: '/event/:id', component: Event },
 
     // A mettre à la fin de toutes les routes
