@@ -292,7 +292,7 @@ export default {
             }
         },
 
-        acceptEvent: function (event) {
+        acceptEvent: function () {
             // `this` fait référence à l'instance de Vue à l'intérieur de `methods`
             console.log("truc");
         },
