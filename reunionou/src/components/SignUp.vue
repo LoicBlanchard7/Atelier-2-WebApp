@@ -46,15 +46,17 @@
             </div>
         </div>
     </div>
+    <Footer/>
+
 </template>
 <script>
 import axios from "axios";
 import "../../scss/custom.scss";
 import NavBar from './NavBar.vue';
-
+import Footer from './Footer.vue';
 export default {
     name: 'SignUp',
-    components: {NavBar},
+    components: {NavBar,Footer},
     data() {
         return {
             name: '',
@@ -108,3 +110,6 @@ export default {
     },
 };
 </script>
+<style lang="scss" scoped>
+
+</style>
