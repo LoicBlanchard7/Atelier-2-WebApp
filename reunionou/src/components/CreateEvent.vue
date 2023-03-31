@@ -2,52 +2,60 @@
     <NavBar />
 
     <div class="container">
-        <div class="row">
-            <div class="col-md-6">
-                <div class="card mt-5">
-                    <div class="card-header">
-                        <h3 class="text-center">Créer un événement</h3>
-                    </div>
-                    <div class="card-body">
-                        <form @submit.prevent="createEvent">
-                            <div class="mb-3">
-                                <label for="title" class="form-label">Titre de l'événement</label>
-                                <input type="text" class="form-control" id="title" v-model="title">
-                            </div>
-                            <div class="mb-3">
-                                <label for="description" class="form-label">Description de l'événement</label>
-                                <textarea class="form-control" id="form-control" rows="3" v-model="description"></textarea>
-                            </div>
-                            <div class="mb-3">
-                                <label for="date" class="form-label">Date de l'événement</label>
-                                <input type="date" class="form-control" id="date" v-model="date">
-                            </div>
-                            <div class="mb-3">
-                                <label for="time" class="form-label">Heure de l'événement</label>
-                                <input type="time" class="form-control" id="time" v-model="time">
-                            </div>
-                            <button type="submit" class="btn btn-primary">Créer</button>
+        <div v-if="!isConnected">
+            <h3>Réunionou</h3>
+            <p>Bienvenue sur Réunionnou, veuillez vous connecté.</p>
+        </div>
+        <div v-else>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="card mt-5">
+                        <div class="card-header">
+                            <h3 class="text-center">Créer un événement</h3>
+                        </div>
+                        <div class="card-body">
+                            <form @submit.prevent="createEvent">
+                                <div class="mb-3">
+                                    <label for="title" class="form-label">Titre de l'événement</label>
+                                    <input type="text" class="form-control" id="title" v-model="title">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="description" class="form-label">Description de l'événement</label>
+                                    <textarea class="form-control" id="form-control" rows="3"
+                                        v-model="description"></textarea>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="date" class="form-label">Date de l'événement</label>
+                                    <input type="date" class="form-control" id="date" v-model="date">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="time" class="form-label">Heure de l'événement</label>
+                                    <input type="time" class="form-control" id="time" v-model="time">
+                                </div>
+                                <button type="submit" class="btn btn-primary">Créer</button>
 
-                            <br />
-                            <small class="errorMessage marginT">{{ this.errorMessage }}</small>
-                            <small class="newAccountMessage marginT">{{ this.newAccountMessage }}</small>
+                                <br />
+                                <small class="errorMessage marginT">{{ this.errorMessage }}</small>
+                                <small class="newAccountMessage marginT">{{ this.newAccountMessage }}</small>
 
-                        </form>
+                            </form>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="col-md-6 marginTMap">
-                <h2>Choisissez un point de rendez-vous</h2>
-                <div ref="map" class="map"></div>
-                <form @submit.prevent="onSubmit">
-                    <div class="mb-3">
-                        <input type="text" class="form-control" id="address" v-model="address"
-                            placeholder="Entrez une adresse">
-                        <button type="submit" class="btn btn-primary">Ajouter une adresse</button>
-                    </div>
-                </form>
+                <div class="col-md-6 marginTMap">
+                    <h2>Choisissez un point de rendez-vous</h2>
+                    <div ref="map" class="map"></div>
+                    <form @submit.prevent="onSubmit">
+                        <div class="mb-3">
+                            <input type="text" class="form-control" id="address" v-model="address"
+                                placeholder="Entrez une adresse">
+                            <button type="submit" class="btn btn-primary">Ajouter une adresse</button>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
+
     </div>
     <Footer/>
 
@@ -79,6 +87,17 @@ export default {
             marker: null,
             address: '',
         };
+    },
+
+    computed: {
+        isConnected() {
+            let acc = JSON.parse(sessionStorage.getItem('account'));
+            if(acc !== null){
+                return true;
+            }else{
+                return false;
+            }
+        }
     },
 
     mounted() {

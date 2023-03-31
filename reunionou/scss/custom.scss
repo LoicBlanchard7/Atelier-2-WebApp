@@ -57,5 +57,12 @@
     font-size: 50px;
 }
 
+.width100 {
+    max-width: 100%;
+}
+
+.widthAuto {
+    width: auto;
+}
 
 @import "../node_modules/bootstrap/scss/bootstrap";
