@@ -55,10 +55,9 @@
                 </div>
             </div>
         </div>
-
     </div>
-    <Footer/>
-
+    
+    <Footer />
 </template>
 
 <script>
@@ -70,7 +69,7 @@ import MapboxClient from '@mapbox/mapbox-sdk/services/geocoding';
 
 export default {
     name: 'CreateEvent',
-    components: { NavBar,Footer },
+    components: { NavBar, Footer },
 
     data() {
         return {
@@ -91,9 +90,9 @@ export default {
     computed: {
         isConnected() {
             let acc = JSON.parse(sessionStorage.getItem('account'));
-            if(acc !== null){
+            if (acc !== null) {
                 return true;
-            }else{
+            } else {
                 return false;
             }
         }
@@ -177,7 +176,7 @@ export default {
             this.map.flyTo({ center });
         },
         onSubmit() {
-            if(this.address != '') {
+            if (this.address != '') {
                 this.addMarkerFromAddress(this.address);
             }
         },
@@ -193,6 +192,4 @@ export default {
     },
 };
 </script>
-<style>
-
-</style>
+<style></style>

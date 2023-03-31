@@ -38,15 +38,6 @@
 .cardHeight {
     min-height: 300px;
 }
-.footer {
-    position: fixed;
-    left: 0;
-    bottom: 0;
-    width: 100%;
-    background-color: rgb(0, 0, 0);
-    color: white;
-    text-align: center;
-  }
 
 .error404 {
     margin-top: 20px;
@@ -62,6 +53,28 @@
 
 .widthAuto {
     width: auto !important;
+}
+
+// .footer {
+//     position: fixed;
+//     left: 0;
+//     bottom: 0;
+//     width: 100%;
+//     background-color: rgb(0, 0, 0);
+//     color: white;
+//     text-align: center;
+// }
+
+.footer {
+    position: relative;
+    margin-top: auto;
+    bottom: 0;
+    width: 100%;
+}
+
+.container {
+    min-height: 55vh;
+    margin-bottom: 10rem;
 }
 
 @import "../../node_modules/bootstrap/scss/bootstrap";
