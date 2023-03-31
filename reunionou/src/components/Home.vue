@@ -98,7 +98,8 @@ export default {
         },
 
         EventModifier(id){
-            console.log(id);
+            // console.log(id);
+            this.$router.push({name: 'Event', params: {id: id}});
         }
 
     },

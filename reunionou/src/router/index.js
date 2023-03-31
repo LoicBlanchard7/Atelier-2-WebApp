@@ -5,6 +5,8 @@ import HomePage from '@/components/Home.vue';
 import SignIn from '@/components/SignIn.vue';
 import SignUp from '@/components/SignUp.vue';
 import CreateEvent from '@/components/CreateEvent.vue';
+import Event from '@/components/Event.vue';
+
 
 const routes = [
 
@@ -18,6 +20,7 @@ const routes = [
 
     { name: 'CreateEvent', path: '/createEvent', component: CreateEvent },
 
+    { name: 'Event', path: '/event/:id', component: Event },
 
     // A mettre à la fin de toutes les routes
     { name : 'notFound', path: '/:pathMatch(.*)', component: NotFound}

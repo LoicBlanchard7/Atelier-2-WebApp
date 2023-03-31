@@ -62,7 +62,7 @@
 }
 
 .widthAuto {
-    width: auto;
+    width: auto !important;
 }
 
 @import "../node_modules/bootstrap/scss/bootstrap";
