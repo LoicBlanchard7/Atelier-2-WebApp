@@ -11,7 +11,9 @@
                 <div class="col-md-6">
                     <div class="col-md-12">
                         <h3 class="text-center text-muted">{{ this.event.title }}</h3>
-                        <p><strong>Auteur -</strong> Loïc Blanchard</p>
+                        <p><strong>Auteur -</strong> {{ this.userName + " " + this.userFirstname }}</p>
+                        <p><strong>Mail -</strong> {{ this.userMail}}</p>
+
                         <p class="text-muted">{{ new Date(this.event.date).toLocaleDateString('fr-FR', {
                             weekday: "long",
                             year: "numeric", month: "short", day: "numeric", hour: "numeric", minute: "numeric"
@@ -64,8 +66,10 @@
                             </div>
                             <div class="card-body overflow-auto">
                                 <div v-for="participant in participants" :key="participant.uid">
-                                    <strong>{{ participant.status }} :</strong> {{ participant.name + " " +
-                                        participant.firstname }}
+                                    <strong
+                                        :class="{ 'text-success': participant.status === 'accepted', 'text-danger': participant.status === 'declined', 'text-info': participant.status === 'pending' }">{{
+                                            participant.status }} </strong> : {{ participant.name + " " +
+        participant.firstname }}
                                 </div>
                             </div>
                             <div class="card-footer" v-if="!isAuthor">
@@ -81,7 +85,8 @@
                             <div class="card-footer" v-else>
                                 <div class="input-group row widthAuto">
                                     <p>
-                                        <strong>Sélection d'un membre</strong></p>
+                                        <strong>Sélection d'un membre</strong>
+                                    </p>
                                     <select class="select" size="4" v-model="newParticipant">
                                         <option v-for="participant in allParticipants" :key="participant.id"
                                             :value=participant>
@@ -107,7 +112,6 @@ import axios from 'axios';
 import NavBar from './NavBar.vue';
 import mapboxgl from 'mapbox-gl';
 
-
 export default {
     name: 'EventPage',
     components: { NavBar },
@@ -122,8 +126,13 @@ export default {
             userToken: "",
             userUid: "",
             userName: "",
+            userMail: "",
             userFirstname: "",
             allParticipants: [],
+            longitude: "6.1792289",
+            lattitude: "48.6937223",
+            marker: null,
+            map: null,
         }
     },
 
@@ -149,19 +158,6 @@ export default {
         }
     },
 
-    mounted() {
-        mapboxgl.accessToken = 'pk.eyJ1IjoibG9sb2F0ZWxpZXIiLCJhIjoiY2xmdjRqYXl3MDNvNzNjczZoY281cnhyayJ9.aE6a7BJ_XrBE8m9oWUAw7g';
-
-        this.map = new mapboxgl.Map({
-            container: this.$refs.map,
-            style: 'mapbox://styles/mapbox/streets-v11',
-            center: [6.1792289, 48.6937223],
-            zoom: 13,
-        });
-
-        this.marker = new mapboxgl.Marker().setLngLat([6.1792289, 48.6937223]).addTo(this.map);
-    },
-
     created() {
         let acc = JSON.parse(sessionStorage.getItem('account'));
         if (acc !== null) {
@@ -169,6 +165,7 @@ export default {
             this.userUid = acc.uid;
             this.userName = acc.name;
             this.userFirstname = acc.firstname;
+            this.userMail = acc.email;
 
             this.initEvent();
             this.initParticipants();
@@ -188,9 +185,19 @@ export default {
 
                 this.event = res.data.events;
 
+                mapboxgl.accessToken = 'pk.eyJ1IjoibG9sb2F0ZWxpZXIiLCJhIjoiY2xmdjRqYXl3MDNvNzNjczZoY281cnhyayJ9.aE6a7BJ_XrBE8m9oWUAw7g';
+
+                this.map = new mapboxgl.Map({
+                    container: this.$refs.map,
+                    style: 'mapbox://styles/mapbox/streets-v11',
+                    center: [this.event.posY, this.event.posX],
+                    zoom: 13,
+                });
+
+                this.marker = new mapboxgl.Marker().setLngLat([this.event.posY, this.event.posX]).addTo(this.map);
+
             } catch (err) {
                 console.log(err);
-
             }
         },
 
@@ -204,7 +211,6 @@ export default {
 
                 if (res.data.participants.length > 0) {
                     this.participants = res.data.participants;
-                    console.log(this.participants);
                 }
 
             } catch (err) {
@@ -264,7 +270,6 @@ export default {
 
                 } catch (err) {
                     console.log(err);
-
                 }
             }
         },
@@ -273,7 +278,6 @@ export default {
             if (this.newParticipant !== '') {
                 try {
                     const link = ` http://iut.netlor.fr/participants/add`;
-
 
                     await axios
                         .post(link, {
@@ -292,13 +296,43 @@ export default {
             }
         },
 
-        acceptEvent: function () {
-            // `this` fait référence à l'instance de Vue à l'intérieur de `methods`
-            console.log("truc");
+        async acceptEvent() {
+            try {
+                const link = `http://iut.netlor.fr/Participants/accept`;
+
+                await axios
+                    .put(link, {
+                        uid: this.userUid,
+                        eid: this.eid,
+                        status: "accepted",
+                    }, {
+                        headers: { Authorization: `Bearer ${this.userToken}` }
+                    });
+
+                this.initParticipants();
+            } catch (err) {
+                console.log(err);
+            }
+
         },
 
-        deniedEvent() {
-            console.log("Refuse");
+        async deniedEvent() {
+            try {
+                const link = `http://iut.netlor.fr/Participants/accept`;
+
+                await axios
+                    .put(link, {
+                        uid: this.userUid,
+                        eid: this.eid,
+                        status: "declined",
+                    }, {
+                        headers: { Authorization: `Bearer ${this.userToken}` }
+                    });
+
+                this.initParticipants();
+            } catch (err) {
+                console.log(err);
+            }
         }
     }
 

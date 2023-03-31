@@ -25,7 +25,7 @@
         <ul class="navbar-nav">
           
           <li class="nav-item" v-if="isConnect">
-            <router-link class="nav-link" to="/signIn" @click="deconnect()">Déconnection</router-link>
+            <router-link class="nav-link" to="/signIn" @click="deconnect()">Déconnexion</router-link>
           </li>
           <li class="nav-item" v-if="!isConnect">
             <router-link class="nav-link" to="/signIn">Connexion</router-link>

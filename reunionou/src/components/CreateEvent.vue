@@ -177,7 +177,9 @@ export default {
             this.map.flyTo({ center });
         },
         onSubmit() {
-            this.addMarkerFromAddress(this.address);
+            if(this.address != '') {
+                this.addMarkerFromAddress(this.address);
+            }
         },
 
         resetForm() {
