@@ -9,23 +9,25 @@
         <div v-else>
             <div class="card-group">
                 <div v-for="event in eventCreatedByUser" :key="event.eid">
-                    <div class="card m-1 cardminWidth cardHeight">
+                    <div class="card m-1 cardminWidth h-100">
                         <div class="card-body ">
-                        <h5 class="card-title">{{ event.Title }}</h5>
+                        <h5 class="card-title">{{ event.title }}</h5>
                         <p class="card-text">{{ event.description }}</p>
-                        <p class="card-text lign-text-bottom"><small class="text-muted">{{new Date(event.date).toLocaleDateString('fr-FR', { weekday:"long", year:"numeric", month:"short", day:"numeric"}) }}</small></p>
+                        <button class="btn btn-primary" @click="EventModifier(event.eid)">Modifier</button>
                         </div>
+                        <div class="card-footer"><small class="text-muted">{{new Date(event.date).toLocaleDateString('fr-FR', { weekday:"long", year:"numeric", month:"short", day:"numeric"}) }}</small></div>
                     </div>
                 </div>
 
-                <div v-for = "events in event" :key="events.eid">
-                     <div class="card m-1 cardminWidth cardHeight">
+                <div v-for = "event in events" :key="event.eid">
+                     <div class="card m-1 cardminWidth h-100">
                         <div class="card-body">
-                        <h5 class="card-title">{{ events.event.Title }}</h5>
-                        <p class="card-text">{{ events.event.description }}</p>
-                        <p class = "card-text">Créateur : {{ events.creator }}</p>
-                        <p class="card-text lign-text-bottom"><small class="text-muted">{{new Date(events.event.date).toLocaleDateString('fr-FR', { weekday:"long", year:"numeric", month:"short", day:"numeric"}) }}</small></p>
+                        <h5 class="card-title">{{ event.event.title }}</h5>
+                        <p class="card-text">{{ event.event.description }}</p>
+                        <p class = "card-text">Créateur : {{ event.creator }}</p>
+                        <button class="btn btn-primary" @click="EventModifier(event.event.eid)">Consulter</button>
                         </div>
+                        <div class="card-footer"><small class="text-muted">{{new Date(event.event.date).toLocaleDateString('fr-FR', { weekday:"long", year:"numeric", month:"short", day:"numeric"}) }}</small></div>
                     </div>
                 </div>
             </div>
@@ -47,8 +49,7 @@ export default {
             userUid: "",
             userToken: "",
             userRefresh: "",
-            numbers : [1,2,3,4,5,6,7,8,9,10],
-            event : [],
+            events : [],
             eventCreatedByUser : [],
             eventParticipate : [],
             eventPending : [],
@@ -74,11 +75,11 @@ export default {
                     headers: { Authorization: `Bearer ${this.userToken}` }
                 })
 
-                this.event = res.data;
+                this.events = res.data;
 
-                if(this.event.length > 0){
-                    this.eventPending = this.event.filter(events => events.status === "pending");
-                    this.eventParticipate = this.event.filter(event => event.uid !== this.uid);
+                if(this.events.length > 0){
+                    this.eventPending = this.events.filter(event => event.status === "pending");
+                    this.eventParticipate = this.events.filter(event => event.uid !== this.uid);
                 }
 
                 const linkCreatedByUser = "http://iut.netlor.fr/event/getEventByUser/"+ this.userUid ;
@@ -95,6 +96,10 @@ export default {
                 } 
             }
         },
+
+        EventModifier(id){
+            console.log(id);
+        }
 
     },
     created(){

@@ -145,6 +145,8 @@ export default {
                     this.newAccountMessage = "Evènement créé.";
                     this.resetForm();
 
+                    this.$router.push('/');
+
                 } catch (err) {
                     console.log(err);
                     this.newAccountMessage = "";
