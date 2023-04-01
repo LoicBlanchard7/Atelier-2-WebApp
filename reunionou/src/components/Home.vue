@@ -7,30 +7,38 @@
             <p>Bienvenue sur Réunionnou, veuillez vous connecté.</p>
         </div>
         <div v-else>
-            <div class="card-group">
-                <div v-for="event in eventCreatedByUser" :key="event.eid">
-                    <div class="card m-1 cardminWidth h-100">
-                        <div class="card-body ">
-                        <h5 class="card-title">{{ event.title }}</h5>
-                        <p class="card-text">{{ event.description }}</p>
-                        <button class="btn btn-primary" @click="EventModifier(event.eid)">Modifier</button>
-                        </div>
-                        <div class="card-footer"><small class="text-muted">{{new Date(event.date).toLocaleDateString('fr-FR', { weekday:"long", year:"numeric", month:"short", day:"numeric"}) }}</small></div>
-                    </div>
-                </div>
-
-                <div v-for = "event in events" :key="event.eid">
-                     <div class="card m-1 cardminWidth h-100">
-                        <div class="card-body">
-                        <h5 class="card-title">{{ event.event.title }}</h5>
-                        <p class="card-text">{{ event.event.description }}</p>
-                        <p class = "card-text">Créateur : {{ event.creator }}</p>
-                        <button class="btn btn-primary" @click="EventModifier(event.event.eid)">Consulter</button>
-                        </div>
-                        <div class="card-footer"><small class="text-muted">{{new Date(event.event.date).toLocaleDateString('fr-FR', { weekday:"long", year:"numeric", month:"short", day:"numeric"}) }}</small></div>
-                    </div>
-                </div>
+            <div class="btn-group btn-group-lg" role="group" aria-label="Basic example">
+                <button type="button" class="btn btn-primary" @click="setFilter('A venir') ">A venir</button>
+                <button type="button" class="btn btn-primary" @click=" setFilter('En attente')">En attente</button>
+                <button type="button" class="btn btn-primary" @click="setFilter('Crée par moi')">Crée par moi</button>
+                <button type="button" class="btn btn-primary" @click="setFilter('Tous')">Tous</button>
             </div>
+
+                <div class="card-group ">
+                
+                    <div v-for="event in eventCreatedByUserToShow" :key="event.eid" class="m-1">
+                        <div class="card cardWidth h-100 card">
+                            <div class="card-body ">
+                            <h5 class="card-title">{{ event.title }}</h5>
+                            <p class="card-text">{{ event.description }}</p>
+                            <button class="btn btn-primary" @click="goToEvent(event.eid)">Modifier</button>
+                            </div>
+                            <div class="card-footer"><small class="text-muted">{{new Date(event.date).toLocaleDateString('fr-FR', { weekday:"long", year:"numeric", month:"short", day:"numeric"}) }}</small></div>
+                        </div>
+                    </div>
+
+                    <div v-for = "event in eventToShow" :key="event.eid" class="m-1">
+                        <div class="card cardWidth h-100 ">
+                            <div class="card-body">
+                            <h5 class="card-title" v-bind:class="showStatus(event.status)">{{ event.event.title }}</h5>
+                            <p class="card-text">{{ event.event.description }}</p>
+                            <p class = "card-text">Créateur : {{ event.creator }}</p>
+                            <button class="btn btn-primary" @click="goToEvent(event.event.eid)">Consulter</button>
+                            </div>
+                            <div class="card-footer"><small class="text-muted">{{new Date(event.event.date).toLocaleDateString('fr-FR', { weekday:"long", year:"numeric", month:"short", day:"numeric"}) }}</small></div>
+                        </div>
+                    </div>
+                </div>
         </div>
     </div>
     
@@ -49,6 +57,7 @@ export default {
             userToken: "",
             userRefresh: "",
             events : [],
+            filtre : "Tous",
             eventCreatedByUser : [],
             eventParticipate : [],
             eventPending : [],
@@ -63,7 +72,32 @@ export default {
             }else{
                 return false;
             }
-        }
+        },
+
+        eventToShow(){
+            if(this.filtre === "A venir"){
+                return this.events.filter(event => new Date( event.event.date ) > new Date());
+            }else if(this.filtre === "En attente"){
+                return this.events.filter(event => event.status === "pending");
+            }else if (this.filtre === "Tous"){
+                return this.events;
+            }else{
+                return [];
+            }
+        },
+
+        eventCreatedByUserToShow(){
+            if(this.filtre === "Crée par moi" || this.filtre === "Tous"){
+                return this.eventCreatedByUser;
+            }else if(this.filtre === "A venir"){
+                console.log(this.eventCreatedByUser[0].date);
+                return this.eventCreatedByUser.filter(event => new Date( event.date ) > new Date());
+            }else{
+                return [];
+            }
+        },
+
+
     },
     methods: {
         async GetEventData(){
@@ -76,10 +110,6 @@ export default {
 
                 this.events = res.data;
 
-                if(this.events.length > 0){
-                    this.eventPending = this.events.filter(event => event.status === "pending");
-                    this.eventParticipate = this.events.filter(event => event.uid !== this.uid);
-                }
 
                 const linkCreatedByUser = "http://iut.netlor.fr/event/getEventByUser/"+ this.userUid ;
                 const resCreatedByUser = await axios.get(linkCreatedByUser,{
@@ -96,10 +126,25 @@ export default {
             }
         },
 
-        EventModifier(id){
+        goToEvent(id){
             // console.log(id);
             this.$router.push({name: 'Event', params: {id: id}});
+        },
+
+        setFilter(filter){
+            this.filtre = filter;
+        },
+
+        showStatus(status){
+            if(status=== "accepted"){
+                return "text-success";
+            }else if (status === "pending"){
+                return "text-primary";
+            }else{
+                return "text-danger";
+            }
         }
+
 
     },
     created(){
