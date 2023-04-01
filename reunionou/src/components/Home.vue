@@ -7,14 +7,14 @@
             <p>Bienvenue sur Réunionnou, veuillez vous connecté.</p>
         </div>
         <div v-else>
-            <div class="btn-group btn-group-lg" role="group" aria-label="Basic example">
+            <div class="btn-group btn-group-lg m-3" role="group" aria-label="Basic example">
                 <button type="button" class="btn btn-primary" @click="setFilter('A venir') ">A venir</button>
                 <button type="button" class="btn btn-primary" @click=" setFilter('En attente')">En attente</button>
                 <button type="button" class="btn btn-primary" @click="setFilter('Crée par moi')">Crée par moi</button>
                 <button type="button" class="btn btn-primary" @click="setFilter('Tous')">Tous</button>
             </div>
 
-                <div class="card-group ">
+                <div class="card-group justify-content-center justify-content-xxl-start">
                 
                     <div v-for="event in eventCreatedByUserToShow" :key="event.eid" class="m-1">
                         <div class="card cardWidth h-100 card">
