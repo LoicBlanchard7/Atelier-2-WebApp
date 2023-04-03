@@ -31,6 +31,16 @@
           </div>
         </div>
       </div>
+      <div class="form-group row mt-2 mb-2">
+        <label for="inputPassword" class="col-sm-2 col-form-label">Mot de passe :</label>
+        <div class="col-sm-10">
+          <input type="text" class="form-control" id="inputPassword" v-model="this.password">
+          <small class="text-secondary" >Laissez le champs vide pour ne pas modifié le mot de passe.</small>
+          <div class="d-flex mt-2">
+            <small class="text-danger" v-if="this.password.length > 1 && this.password.length <8">Le mot de passe doit faire 8 caractères</small>
+          </div>
+        </div>
+      </div>
       <button type="button" class="btn btn-secondary mt-3 mb-3" @click="this.update()"
         v-bind:disabled="isValide == false">Sauvegarder les modifications</button>
       <p class="newAccountMessage">{{ this.message }}</p>
@@ -54,6 +64,7 @@ export default {
       name: "",
       firstname: "",
       email: "",
+      password: "",
       message: ""
     }
   },
@@ -67,23 +78,37 @@ export default {
     }
   },
   methods: {
-    async getEmail() {
+    async getInfoUser() {
       try {
         const user = await axios.get("http://iut.netlor.fr/auth/userId/" + this.uid);
         this.email = user.data.user.email;
+        this.name = user.data.user.name;
+        this.firstname = user.data.user.firstname;
       } catch (err) {
         console.log(err);
       }
     },
     async update() {
       if (this.isValide) {
-        try {
-          await axios.put("http://iut.netlor.fr/auth/updateUser/", {
+        let data = {};
+        if(this.password.length === 0){
+          data = {
             uid: this.uid,
             name: this.name,
             firstname: this.firstname
-          });
+          }
+        }else{
+          data = {
+            uid: this.uid,
+            name: this.name,
+            firstname: this.firstname,
+            password: this.password
+          }
+        }
+        try {
+          await axios.put("http://iut.netlor.fr/auth/updateUser/", data);
           this.message = "Les modifications ont bien été enregistrées";
+          this.password = "";
         } catch (err) {
           console.log(err);
         }
@@ -95,9 +120,8 @@ export default {
     this.uid = acc.uid;
     this.token = acc.access_token;
     this.refresh = acc.refresh_token;
-    this.firstname = acc.firstname;
-    this.name = acc.name;
-    this.getEmail();
+    this.password = "";
+    this.getInfoUser();
   },
 }
 </script>
