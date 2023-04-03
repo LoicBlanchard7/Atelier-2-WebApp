@@ -7,11 +7,11 @@
             <p>Bienvenue sur Réunionnou, veuillez vous connecté.</p>
         </div>
         <div v-else>
-            <div class="btn-group btn-group-lg m-3" role="group" aria-label="Basic example">
-                <button type="button" class="btn btn-primary" @click="setFilter('A venir') ">A venir</button>
-                <button type="button" class="btn btn-primary" @click=" setFilter('En attente')">En attente</button>
-                <button type="button" class="btn btn-primary" @click="setFilter('Crée par moi')">Crée par moi</button>
-                <button type="button" class="btn btn-primary" @click="setFilter('Tous')">Tous</button>
+            <div class="btn-toolbar justify-content-center m-3 p-1" role="group" aria-label="Basic example">
+                <button type="button" class="btn btn-primary m-1" :disabled="tousDisabled" @click="setFilter('Tous')">Tous</button>
+                <button type="button" class="btn btn-primary  m-1" :disabled="aVenirDisabled" @click="setFilter('A venir') ">A venir</button>
+                <button type="button" class="btn btn-primary  m-1" :disabled="enAttenteDisabled" @click=" setFilter('En attente')">En attente</button>
+                <button type="button" class="btn btn-primary  m-1" :disabled="creeParMoiDisabled" @click="setFilter('Crée par moi')">Crée par moi</button>
             </div>
 
                 <div class="card-group justify-content-center justify-content-xxl-start">
@@ -96,6 +96,38 @@ export default {
                 return [];
             }
         },
+
+        tousDisabled(){
+            if(this.filtre === "Tous"){
+                return true;
+            }else{
+                return false;
+            }
+        },
+
+        aVenirDisabled(){
+            if(this.filtre === "A venir"){
+                return true;
+            }else{
+                return false;
+            }
+        },
+
+        enAttenteDisabled(){
+            if(this.filtre === "En attente"){
+                return true;
+            }else{
+                return false;
+            }
+        },
+
+        creeParMoiDisabled(){
+            if(this.filtre === "Crée par moi"){
+                return true;
+            }else{
+                return false;
+            }
+        }
 
 
     },
