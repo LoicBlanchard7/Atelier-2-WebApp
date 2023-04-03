@@ -14,10 +14,6 @@
 
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-          <li class="nav-item">
-            <router-link class="nav-link" to="/Profil">Mon profil</router-link>
-          </li>
-
           <li class="nav-item" v-if:="isConnect">
             <router-link class="nav-link" to="/createEvent">Créer événement</router-link>
           </li>
@@ -31,7 +27,9 @@
           <li class="nav-item" v-if="!isConnect">
             <router-link class="nav-link" to="/signUp">Inscription</router-link>
           </li>
-
+          <li class="nav-item" v-if="isConnect">
+            <router-link class="nav-link" to="/Profil">Mon profil</router-link>
+          </li>
           <li class="nav-item" v-if="isConnect">
             <router-link class="nav-link" to="/signIn" @click="deconnect()">Déconnexion</router-link>
           </li>
