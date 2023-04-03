@@ -28,7 +28,8 @@
                     </div>
                 </div>
             </div>
-            <div v-if="isAuthor"><input type="txt" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" :value="link" disabled></div>
+            <div v-if="isAuthor"><input type="txt" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp"
+                    :value="link" disabled></div>
             <div class="row marginTMap">
                 <div class="col-md-6">
                     <div class="col-md-12">
@@ -137,6 +138,10 @@ export default {
             lattitude: "48.6937223",
             marker: null,
             map: null,
+            searchRadius: 1000, // Rayon de recherche en mètres
+            poiFilter: 'restaurant', // Filtre pour les points d'intérêt
+            poiResults: [], // Résultats de la recherche
+            eventUid: '',
         }
     },
 
@@ -167,19 +172,19 @@ export default {
     created() {
         let acc = JSON.parse(sessionStorage.getItem('account'));
         let participants = JSON.parse(sessionStorage.getItem('participantsUid'));
-        
-            this.initEvent();
-            this.initParticipants();
-            this.initComments();
+
+        this.initEvent();
+        this.initParticipants();
+        this.initComments();
+
         if (acc !== null) {
             this.userToken = acc.access_token;
             this.userUid = acc.uid;
-            this.initUserInfo(this.userUid);
             this.initAllParticipants();
-        }else if (participants !== null) {
+        } else if (participants !== null) {
             this.initParticipantsInfo();
 
-        }else{
+        } else {
             this.$router.push({ name: 'Home' });
         }
     },
@@ -192,6 +197,10 @@ export default {
                 const res = await axios.get(link);
 
                 this.event = res.data.events;
+                this.eventUid = this.event.uid;
+
+                this.initUserInfo(this.eventUid);
+
 
                 mapboxgl.accessToken = 'pk.eyJ1IjoibG9sb2F0ZWxpZXIiLCJhIjoiY2xmdjRqYXl3MDNvNzNjczZoY281cnhyayJ9.aE6a7BJ_XrBE8m9oWUAw7g';
 
@@ -282,7 +291,7 @@ export default {
             }
         },
 
-        async sendMessage(message) {       
+        async sendMessage(message) {
             if (message !== '') {
                 try {
                     const link = ` http://iut.netlor.fr/Participants/comment/add`;
