@@ -217,7 +217,7 @@ export default {
                 this.marker = new mapboxgl.Marker().setLngLat([this.event.posY, this.event.posX]).addTo(this.map);
 
             } catch (err) {
-                console.log(err);
+                this.$router.push({ name: 'Home' });
             }
         },
 
