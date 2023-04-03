@@ -279,6 +279,8 @@ export default {
                             content: this.newMessage,
                         });
 
+                    this.newMessage = "";
+
                     this.initComments();
 
                 } catch (err) {
