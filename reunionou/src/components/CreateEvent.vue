@@ -56,7 +56,7 @@
             </div>
         </div>
     </div>
-    
+
     <Footer />
 </template>
 
@@ -169,8 +169,12 @@ export default {
 
             if (!this.marker) {
                 this.marker = new mapboxgl.Marker().setLngLat(center).addTo(this.map);
+                this.lattitude = center[1];
+                this.longitude = center[0];
             } else {
                 this.marker.setLngLat(center);
+                this.lattitude = center[1];
+                this.longitude = center[0];
             }
 
             this.map.flyTo({ center });
