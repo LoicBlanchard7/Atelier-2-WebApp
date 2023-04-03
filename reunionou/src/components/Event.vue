@@ -28,8 +28,6 @@
                     </div>
                 </div>
             </div>
-            <div v-if="isAuthor"><input type="txt" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp"
-                    :value="link" disabled></div>
             <div class="row marginTMap">
                 <div class="col-md-6">
                     <div class="col-md-12">
@@ -105,6 +103,11 @@
                     </div>
                 </div>
             </div>
+                <div v-if="isAuthor" class="input-group m-3">
+                    <span class="input-group-text">Lien de partage : </span>
+                    <input type="text" class="form-control"  ref="clone"  :value="link" disabled>
+                    <button type="submit" class="btn btn-primary" @click="copy()">COPIER</button>
+                </div>
         </div>
     </div>
     <Footer />
@@ -383,6 +386,11 @@ export default {
                 this.acceptMessage = "";
             }
 
+        },
+
+        copy(){
+            navigator.clipboard.writeText(this.link);
+            alert("Copied the text: " + this.link);
         }
     }
 };
