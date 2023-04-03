@@ -28,7 +28,6 @@
                     </div>
                 </div>
             </div>
-            <div v-if="isAuthor"><input type="txt" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" :value="link" disabled></div>
             <div class="row marginTMap">
                 <div class="col-md-6">
                     <div class="col-md-12">
@@ -104,6 +103,11 @@
                     </div>
                 </div>
             </div>
+                <div v-if="isAuthor" class="input-group m-3">
+                    <span class="input-group-text">Lien de partage : </span>
+                    <input type="text" class="form-control"  ref="clone"  :value="link" disabled>
+                    <button type="submit" class="btn btn-primary" @click="copy()">COPIER</button>
+                </div>
         </div>
     </div>
     <Footer />
@@ -137,6 +141,10 @@ export default {
             lattitude: "48.6937223",
             marker: null,
             map: null,
+            searchRadius: 1000, // Rayon de recherche en mètres
+            poiFilter: 'restaurant', // Filtre pour les points d'intérêt
+            poiResults: [], // Résultats de la recherche
+            eventUid: '',
         }
     },
 
@@ -167,19 +175,19 @@ export default {
     created() {
         let acc = JSON.parse(sessionStorage.getItem('account'));
         let participants = JSON.parse(sessionStorage.getItem('participantsUid'));
-        
-            this.initEvent();
-            this.initParticipants();
-            this.initComments();
+
+        this.initEvent();
+        this.initParticipants();
+        this.initComments();
+
         if (acc !== null) {
             this.userToken = acc.access_token;
             this.userUid = acc.uid;
-            this.initUserInfo(this.userUid);
             this.initAllParticipants();
-        }else if (participants !== null) {
+        } else if (participants !== null) {
             this.initParticipantsInfo();
 
-        }else{
+        } else {
             this.$router.push({ name: 'Home' });
         }
     },
@@ -192,6 +200,10 @@ export default {
                 const res = await axios.get(link);
 
                 this.event = res.data.events;
+                this.eventUid = this.event.uid;
+
+                this.initUserInfo(this.eventUid);
+
 
                 mapboxgl.accessToken = 'pk.eyJ1IjoibG9sb2F0ZWxpZXIiLCJhIjoiY2xmdjRqYXl3MDNvNzNjczZoY281cnhyayJ9.aE6a7BJ_XrBE8m9oWUAw7g';
 
@@ -205,7 +217,7 @@ export default {
                 this.marker = new mapboxgl.Marker().setLngLat([this.event.posY, this.event.posX]).addTo(this.map);
 
             } catch (err) {
-                console.log(err);
+                this.$router.push({ name: 'Home' });
             }
         },
 
@@ -282,7 +294,7 @@ export default {
             }
         },
 
-        async sendMessage(message) {       
+        async sendMessage(message) {
             if (message !== '') {
                 try {
                     const link = ` http://iut.netlor.fr/Participants/comment/add`;
@@ -374,6 +386,11 @@ export default {
                 this.acceptMessage = "";
             }
 
+        },
+
+        copy(){
+            navigator.clipboard.writeText(this.link);
+            alert("Copied the text: " + this.link);
         }
     }
 };
