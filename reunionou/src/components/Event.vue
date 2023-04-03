@@ -141,9 +141,8 @@ export default {
             lattitude: "48.6937223",
             marker: null,
             map: null,
-            searchRadius: 1000, // Rayon de recherche en mètres
-            poiFilter: 'restaurant', // Filtre pour les points d'intérêt
-            poiResults: [], // Résultats de la recherche
+            searchRadius: 500,
+            poiResults: [],
             eventUid: '',
         }
     },
@@ -204,7 +203,6 @@ export default {
 
                 this.initUserInfo(this.eventUid);
 
-
                 mapboxgl.accessToken = 'pk.eyJ1IjoibG9sb2F0ZWxpZXIiLCJhIjoiY2xmdjRqYXl3MDNvNzNjczZoY281cnhyayJ9.aE6a7BJ_XrBE8m9oWUAw7g';
 
                 this.map = new mapboxgl.Map({
@@ -215,6 +213,33 @@ export default {
                 });
 
                 this.marker = new mapboxgl.Marker().setLngLat([this.event.posY, this.event.posX]).addTo(this.map);
+
+                this.map.on('load', () => {
+                    this.map.addSource('poi-source', {
+                        type: 'geojson',
+                        data: {
+                            type: 'FeatureCollection',
+                            features: [],
+                        },
+                    });
+
+                    const source = this.map.getSource('poi-source');
+                    if (source) {
+                        source.setData(
+                            `https://api.mapbox.com/geocoding/v5/mapbox.places/${this.event.posY},${this.event.posX}.json?access_token=${mapboxgl.accessToken}&proximity=${this.event.posY},${this.event.posX}&radius=${this.searchRadius}`
+                        );
+                    }
+
+                    this.map.addLayer({
+                        id: 'poi-layer',
+                        type: 'symbol',
+                        source: 'poi-source',
+                        layout: {
+                            'icon-image': 'monument-15',
+                            'icon-size': 1.5,
+                        },
+                    });
+                });
 
             } catch (err) {
                 this.$router.push({ name: 'Home' });
