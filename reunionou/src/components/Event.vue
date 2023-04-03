@@ -12,7 +12,7 @@
                     <div class="col-md-12">
                         <h3 class="text-center text-muted">{{ this.event.title }}</h3>
                         <p><strong>Auteur -</strong> {{ this.userName + " " + this.userFirstname }}</p>
-                        <p><strong>Mail -</strong> {{ this.userMail}}</p>
+                        <p><strong>Mail -</strong> {{ this.userMail }}</p>
 
                         <p class="text-muted">{{ new Date(this.event.date).toLocaleDateString('fr-FR', {
                             weekday: "long",
@@ -46,7 +46,7 @@
                                 </div>
                             </div>
                             <div class="card-footer">
-                                <form @submit.prevent="sendMessage">
+                                <form @submit.prevent="sendMessage(this.newMessage)">
                                     <div class="input-group">
                                         <input type="text" class="form-control" v-model="newMessage"
                                             placeholder="Ecrire un commentaire ...">
@@ -73,6 +73,9 @@
                                 </div>
                             </div>
                             <div class="card-footer" v-if="!isAuthor">
+                                <input type="text" class="form-control" v-model="acceptMessage"
+                                    placeholder="Ecrire un commentaire ...">
+
                                 <div class="input-group row widthAuto">
                                     <div class="col-md-6">
                                         <button v-on:click="acceptEvent" class="btn btn-success col-12">Accepter</button>
@@ -82,6 +85,7 @@
                                     </div>
                                 </div>
                             </div>
+
                             <div class="card-footer" v-else>
                                 <div class="input-group row widthAuto">
                                     <p>
@@ -106,7 +110,6 @@
         </div>
     </div>
     <Footer />
-
 </template>
   
 <script>
@@ -121,6 +124,7 @@ export default {
 
     data() {
         return {
+            acceptMessage: '',
             comments: [],
             participants: [],
             newMessage: '',
@@ -252,21 +256,22 @@ export default {
                 console.log(err);
             }
         },
-        async initUserInfo(uid){
+
+        async initUserInfo(uid) {
             try {
                 const user = await axios
-                    .get(`http://iut.netlor.fr/auth/userId/`+uid);
+                    .get(`http://iut.netlor.fr/auth/userId/` + uid);
                 this.userFirstname = user.data.user.firstname;
                 this.userName = user.data.user.name;
                 this.userMail = user.data.user.email;
-                
+
             } catch (err) {
                 console.log(err);
             }
         },
 
-        async sendMessage() {
-            if (this.newMessage !== '') {
+        async sendMessage(message) {       
+            if (message !== '') {
                 try {
                     const link = ` http://iut.netlor.fr/Participants/comment/add`;
 
@@ -276,7 +281,7 @@ export default {
                             name: this.userName,
                             firstname: this.userFirstname,
                             eid: this.eid,
-                            content: this.newMessage,
+                            content: message,
                         });
 
                     this.newMessage = "";
@@ -329,6 +334,10 @@ export default {
                 console.log(err);
             }
 
+            if (this.acceptMessage != '') {
+                this.sendMessage("Accepte l'invitation. Message : " + this.acceptMessage);
+                this.acceptMessage = "";
+            }
         },
 
         async deniedEvent() {
@@ -348,9 +357,14 @@ export default {
             } catch (err) {
                 console.log(err);
             }
+
+            if (this.acceptMessage != '') {
+                this.sendMessage("Refuse l'invitation. Message : " + this.acceptMessage);
+                this.acceptMessage = "";
+            }
+
         }
     }
-
 };
 </script>
   
