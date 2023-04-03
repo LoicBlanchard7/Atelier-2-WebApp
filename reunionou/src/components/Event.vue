@@ -2,11 +2,7 @@
     <NavBar />
 
     <div class="container">
-        <div v-if="!isConnected">
-            <h3>Réunionou</h3>
-            <p>Bienvenue sur Réunionnou, veuillez vous connecté.</p>
-        </div>
-        <div v-else>
+        <div>
             <div class="row marginTMap">
                 <div class="col-md-6">
                     <div class="col-md-12">
@@ -32,7 +28,7 @@
                     </div>
                 </div>
             </div>
-
+            <div v-if="isAuthor"><input type="txt" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" :value="link" disabled></div>
             <div class="row marginTMap">
                 <div class="col-md-6">
                     <div class="col-md-12">
@@ -103,6 +99,7 @@
                                     </div>
                                 </div>
                             </div>
+
                         </div>
                     </div>
                 </div>
@@ -162,20 +159,28 @@ export default {
             } else {
                 return false;
             }
-        }
+        },
+
+        link() { return "http://localhost:8080/partage/event/" + this.eid },
     },
 
     created() {
         let acc = JSON.parse(sessionStorage.getItem('account'));
+        let participants = JSON.parse(sessionStorage.getItem('participantsUid'));
+        
+            this.initEvent();
+            this.initParticipants();
+            this.initComments();
         if (acc !== null) {
             this.userToken = acc.access_token;
             this.userUid = acc.uid;
             this.initUserInfo(this.userUid);
-
-            this.initEvent();
-            this.initParticipants();
-            this.initComments();
             this.initAllParticipants();
+        }else if (participants !== null) {
+            this.initParticipantsInfo();
+
+        }else{
+            this.$router.push({ name: 'Home' });
         }
     },
 
@@ -184,9 +189,7 @@ export default {
             try {
                 const link = `http://iut.netlor.fr/event/getEvent/` + this.eid;
 
-                const res = await axios.get(link, {
-                    headers: { Authorization: `Bearer ${this.userToken}` }
-                });
+                const res = await axios.get(link);
 
                 this.event = res.data.events;
 
@@ -210,9 +213,7 @@ export default {
             try {
                 const link = `http://iut.netlor.fr/participants/event/` + this.eid;
 
-                const res = await axios.get(link, {
-                    headers: { Authorization: `Bearer ${this.userToken}` }
-                });
+                const res = await axios.get(link);
 
                 if (res.data.participants.length > 0) {
                     this.participants = res.data.participants;
@@ -225,11 +226,9 @@ export default {
 
         async initComments() {
             try {
-                const link = `http://iut.netlor.fr/participants/comment/` + this.eid;
+                const link = `http://iut.netlor.fr/participants/comment/getComment/` + this.eid;
 
-                const res = await axios.get(link, {
-                    headers: { Authorization: `Bearer ${this.userToken}` }
-                });
+                const res = await axios.get(link);
 
                 if (res.data.comments.length > 0) {
                     this.comments = res.data.comments;
@@ -265,6 +264,19 @@ export default {
                 this.userName = user.data.user.name;
                 this.userMail = user.data.user.email;
 
+            } catch (err) {
+                console.log(err);
+            }
+        },
+
+        async initParticipantsInfo() {
+            try {
+                let uuid = JSON.parse(sessionStorage.getItem('participantsUid'));
+                const participants = await axios
+                    .get(`http://iut.netlor.fr/participants/getParticipant/` + uuid);
+                this.userFirstname = participants.data.participants[0].firstname;
+                this.userName = participants.data.participants[0].name;
+                this.userUid = participants.data.participants[0].uid;
             } catch (err) {
                 console.log(err);
             }
@@ -319,7 +331,6 @@ export default {
         async acceptEvent() {
             try {
                 const link = `http://iut.netlor.fr/Participants/accept`;
-
                 await axios
                     .put(link, {
                         uid: this.userUid,

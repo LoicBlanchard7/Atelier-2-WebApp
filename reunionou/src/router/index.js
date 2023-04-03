@@ -9,6 +9,7 @@ import Profil from '@/components/Profil.vue';
 import Event from '@/components/Event.vue';
 import UpdateEvent from '@/components/UpdateEvent.vue';
 
+import PartageEvent from '@/components/PartageEvent.vue';
 
 const routes = [
 
@@ -28,6 +29,7 @@ const routes = [
 
     { name: 'UpdateEvent', path: '/updateEvent/:id', component: UpdateEvent },
 
+    {name : 'PartageEvent', path: '/partage/event/:id', component: PartageEvent },
 
     // A mettre à la fin de toutes les routes
     { name : 'notFound', path: '/:pathMatch(.*)', component: NotFound}
