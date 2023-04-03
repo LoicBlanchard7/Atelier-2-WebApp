@@ -166,9 +166,7 @@ export default {
         if (acc !== null) {
             this.userToken = acc.access_token;
             this.userUid = acc.uid;
-            this.userName = acc.name;
-            this.userFirstname = acc.firstname;
-            this.userMail = acc.email;
+            this.initUserInfo(this.userUid);
 
             this.initEvent();
             this.initParticipants();
@@ -250,6 +248,18 @@ export default {
                     this.allParticipants = res.data.users;
                 }
 
+            } catch (err) {
+                console.log(err);
+            }
+        },
+        async initUserInfo(uid){
+            try {
+                const user = await axios
+                    .get(`http://iut.netlor.fr/auth/userId/`+uid);
+                this.userFirstname = user.data.user.firstname;
+                this.userName = user.data.user.name;
+                this.userMail = user.data.user.email;
+                
             } catch (err) {
                 console.log(err);
             }

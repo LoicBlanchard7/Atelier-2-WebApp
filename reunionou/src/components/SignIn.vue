@@ -78,28 +78,13 @@ export default {
                         password: this.password
                     });
                 this.errorMessage = '';
-                this.names = await this.getNames(user.data.uid);
-                let newStorage = Object.assign({},user.data, this.names);
-                sessionStorage.setItem('account', JSON.stringify(newStorage));
+                sessionStorage.setItem('account', JSON.stringify(user.data));
                 this.$router.push({ name: 'Home' });
             } catch (err) {
                 console.log(err);
                 this.errorMessage = "L'adresse mail ou le mot de passe est incorrecte.";
             }
             this.resetForm();
-        },
-        async getNames(uid){
-            try {
-                const user = await axios
-                    .get(`http://iut.netlor.fr/auth/userId/`+uid);
-                let names = {
-                    firstname: user.data.user.firstname,
-                    name: user.data.user.name,
-                    email: user.data.user.email};
-                return names;
-            } catch (err) {
-                console.log(err);
-            }
         },
         resetForm() {
             this.email = '';
