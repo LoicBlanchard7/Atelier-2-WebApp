@@ -220,24 +220,6 @@ export default {
                     zoom: 13,
                 });
 
-                var origin = [2.3488, 48.8534];
-
-                this.directions = new MapboxDirections({
-                    accessToken: mapboxgl.accessToken,
-                    unit: 'metric',
-                    profile: 'mapbox/driving-traffic',
-                    controls: {
-
-                        instructions: true
-                    },
-                    waypoints: [
-                        { coordinates: origin }
-                    ]
-                });
-
-                this.map.addControl(this.directions, 'top-left');
-
-
                 this.marker = new mapboxgl.Marker().setLngLat([this.event.posY, this.event.posX]).addTo(this.map);
 
                 this.map.on('load', () => {
