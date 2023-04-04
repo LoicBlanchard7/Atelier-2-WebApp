@@ -14,7 +14,7 @@
         <div class="col-sm-10">
           <input type="text" class="form-control" id="inputPassword" v-model="this.name">
           <div class="d-flex mt-2">
-            <small class="text-danger" v-if="this.name.length >= 50">Le nom ne doit pas dépasser 50 caractères</small>
+            <small class="text-danger" v-if="this.name.length > 20">Le nom ne doit pas dépasser 20 caractères</small>
             <small class="text-danger" v-if="this.name.length === 0">Le nom doit faire au minimum 1 caractère</small>
           </div>
         </div>
@@ -24,7 +24,7 @@
         <div class="col-sm-10">
           <input type="text" class="form-control" id="inputPassword" v-model="this.firstname">
           <div class="d-flex mt-2">
-            <small class="text-danger" v-if="this.firstname.length >= 50">Le prénom ne doit pas dépasser 50
+            <small class="text-danger" v-if="this.firstname.length > 20">Le prénom ne doit pas dépasser 20
               caractères</small>
             <small class="text-danger" v-if="this.firstname.length === 0">Le prénom doit faire au minimum 1
               caractère</small>
@@ -41,6 +41,7 @@
           <input type="password" class="form-control" id="inputPassword" v-model="this.password">
           <div class="d-flex  mt-2">
             <small class="text-danger" v-if="this.password.length > 1 && this.password.length <8">Le mot de passe doit faire 8 caractères</small>
+            <small class="text-danger" v-if="this.password.length > 30">Le mot de passe doit faire moins de 30 caractères</small>
           </div>
         </div>
       </div>
@@ -49,7 +50,6 @@
         <div class="col-sm-10">
           <input type="password" class="form-control" id="inputPassword" v-model="this.confirmpassword">
           <div class="d-flex flex-column mt-2">
-            <small class="text-danger text-left" v-if="this.password.length > 1 && this.password.length <8">Le mot de passe doit faire 8 caractères</small>
             <small class="text-danger text-left" v-if="this.password !== this.confirmpassword">Le mot de passe n'est pas identique</small>
           </div>
         </div>
@@ -85,14 +85,14 @@ export default {
   },
   computed: {
     isValide() {
-      if (this.name.length >= 50 || this.name.length === 0 || this.firstname.length >= 50 || this.firstname.length === 0) {
+      if (this.name.length >= 20 || this.name.length === 0 || this.firstname.length >= 20 || this.firstname.length === 0) {
         return false;
       } else {
         return true;
       }
     },
     isValidePassword(){
-      if(this.password.length <8 || this.password !== this.confirmpassword){
+      if(this.password.length <8 || this.password.length > 30 || this.password !== this.confirmpassword){
         return false;
       }else{
         return true;
@@ -149,7 +149,6 @@ export default {
     this.uid = acc.uid;
     this.token = acc.access_token;
     this.refresh = acc.refresh_token;
-    this.password = "";
     this.getInfoUser();
   },
 }
