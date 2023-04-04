@@ -22,7 +22,7 @@
 
                 <div v-for="event in eventCreatedByUserToShow" :key="event.eid" class="m-1">
                     <div class="card cardWidth h-100 card">
-                        <div class="card-body ">
+                        <div class="card-body cardBackground">
                             <h5 class="card-title">{{ event.title }}</h5>
                             <p class="card-text">{{ event.description }}</p>
 
@@ -42,7 +42,7 @@
 
                 <div v-for="event in eventToShow" :key="event.eid" class="m-1">
                     <div class="card cardWidth h-100 ">
-                        <div class="card-body">
+                        <div class="card-body cardBackground">
                             <h5 class="card-title" v-bind:class="showStatus(event.status)">{{ event.event.title }}</h5>
                             <p class="card-text">{{ event.event.description }}</p>
                             <p class="card-text">Créateur : {{ event.creator }}</p>
@@ -107,7 +107,6 @@ export default {
             if (this.filtre === "Crée par moi" || this.filtre === "Tous") {
                 return this.eventCreatedByUser;
             } else if (this.filtre === "A venir") {
-                console.log(this.eventCreatedByUser[0].date);
                 return this.eventCreatedByUser.filter(event => new Date(event.date) > new Date());
             } else {
                 return [];

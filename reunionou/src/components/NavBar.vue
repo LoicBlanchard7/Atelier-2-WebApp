@@ -28,10 +28,10 @@
             <router-link class="nav-link" to="/signUp">Inscription</router-link>
           </li>
           <li class="nav-item" v-if="isConnect">
-            <router-link class="nav-link" to="/Profil">Mon profil</router-link>
+            <router-link class="nav-link" to="/Profil"><i class="bi bi-person-circle"></i> Mon profil</router-link>
           </li>
           <li class="nav-item" v-if="isConnect">
-            <router-link class="nav-link" to="/signIn" @click="deconnect()">Déconnexion</router-link>
+            <router-link class="nav-link" to="/signIn" @click="deconnect()">Déconnexion <i class="bi bi-box-arrow-right"></i></router-link>
           </li>
         </ul>
       </div>

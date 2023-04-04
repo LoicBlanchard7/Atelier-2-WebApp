@@ -45,8 +45,7 @@
                                     <div class="input-group">
                                         <input type="text" class="form-control" v-model="newMessage"
                                             placeholder="Ecrire un commentaire ...">
-
-                                        <button type="submit" class="btn btn-primary">Envoyer</button>
+                                        <button type="submit" class="btn btn-primary">Envoyer <i class="bi bi-send-fill"></i></button>
                                     </div>
                                     <small class="text-danger" v-if="this.newMessage.length > 256">Le commentaire ne doit pas
                                         dépasser
@@ -77,10 +76,10 @@
 
                                 <div class="input-group row widthAuto">
                                     <div class="col-md-6">
-                                        <button v-on:click="acceptEvent" class="btn btn-success col-12">Accepter</button>
+                                        <button v-on:click="acceptEvent" class="btn btn-success col-12"><i class="bi bi-check-lg"></i></button>
                                     </div>
                                     <div class="col-md-6">
-                                        <button v-on:click="deniedEvent" class="btn btn-danger col-12">Refuser</button>
+                                        <button v-on:click="deniedEvent" class="btn btn-danger col-12"><i class="bi bi-x-lg"></i></button>
                                     </div>
                                 </div>
 
@@ -102,7 +101,7 @@
                                     </select>
                                     <div class="input-group">
                                         <button v-on:click="addParticipant" type="submit"
-                                            class="btn btn-primary col-12">Ajouter</button>
+                                            class="btn btn-primary col-12"><i class="bi bi-plus-circle"></i></button>
                                     </div>
                                 </div>
                             </div>
@@ -111,11 +110,11 @@
                     </div>
                 </div>
             </div>
-            <div v-if="isAuthor" class="input-group m-3">
-                <span class="input-group-text">Lien de partage : </span>
-                <input type="text" class="form-control" ref="clone" :value="link" disabled>
-                <button type="submit" class="btn btn-primary" @click="copy()">COPIER</button>
-            </div>
+                <div v-if="isAuthor" class="input-group m-3">
+                    <span class="input-group-text">Lien de partage : <i class="bi bi-link-45deg"></i> </span>
+                    <input type="text" class="form-control"  ref="clone"  :value="link" disabled>
+                    <button type="submit" class="btn btn-primary" @click="copy()"><i class="bi bi-clipboard"></i></button>
+                </div>
         </div>
     </div>
     <Footer />
