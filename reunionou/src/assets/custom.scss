@@ -86,7 +86,7 @@
 .cardEventAuthor {
     max-height: 8rem; 
     min-height: 8rem;
-    margin-bottom: 1rem;
+    margin-bottom: 2rem;
 }
 
 .cardEventParticipant {
@@ -99,5 +99,10 @@
 }
 
 
+
 @import "../../node_modules/bootstrap/scss/bootstrap";
 @import "../../node_modules/bootstrap-icons/font/bootstrap-icons.css";
+
+.addButton{
+    border-radius: 0%;
+}

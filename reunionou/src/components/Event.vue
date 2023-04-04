@@ -100,16 +100,19 @@
                                 <div class="card-header">
                                     <strong>Sélection d'un membre</strong>
                                 </div>
-                                <select class="select" size="4" v-model="newParticipant">
-                                    <option v-for="participant in             allParticipants" :key="participant.id"
-                                        :value=participant>
-                                        {{ participant.name + " " + participant.firstname }}
-                                    </option>
-                                </select>
-                                <div class="input-group">
-                                    <button v-on:click="addParticipant" type="submit" class="btn btn-primary col-12"><i
+                                
+                                    <select class="select card-text" size="4" v-model="newParticipant">
+                                        <option v-for="participant in             allParticipants" :key="participant.id"
+                                            :value=participant>
+                                            {{ participant.name + " " + participant.firstname }}
+                                        </option>
+                                    </select>
+
+                                    
+                                    <button v-on:click="addParticipant" type="submit" class="btn btn-primary addButton col-12"><i
                                             class="bi bi-plus-circle"></i></button>
-                                </div>
+                                   
+                            
                             </div>
                         </div>
                     </div>
