@@ -19,11 +19,17 @@
                                     <label for="title" class="form-label">Titre de l'événement</label>
                                     <input type="text" class="form-control" id="title" v-model="this.title">
                                 </div>
+                                <small class="text-danger" v-if="this.title.length > 128">Le titre ne doit pas
+                                        dépasser
+                                        128 caractères.</small>
                                 <div class="mb-3">
                                     <label for="description" class="form-label">Description de l'événement</label>
                                     <textarea class="form-control" id="form-control" rows="3"
                                         v-model="this.description"></textarea>
                                 </div>
+                                <small class="text-danger" v-if="this.description.length > 256">La description ne doit pas
+                                        dépasser
+                                        256 caractères.</small>
                                 <div class="mb-3">
                                     <label for="date" class="form-label">Date de l'événement</label>
                                     <input type="date" class="form-control" id="date" v-model="this.date">
@@ -166,7 +172,7 @@ export default {
         },
 
         async updateEvent() {
-            if (this.title != '' && this.description != '' && this.posX != '' && this.posY != '' && this.date != '' && this.time != '') {
+            if (this.title != '' && this.description != '' && this.posX != '' && this.posY != '' && this.date != '' && this.time != '' && this.description.length < 257 && this.title.length < 129) {
                 try {
                     await axios
                         .put(`http://iut.netlor.fr/event/updateEvent`, {
