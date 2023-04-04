@@ -45,9 +45,11 @@
                                     <div class="input-group">
                                         <input type="text" class="form-control" v-model="newMessage"
                                             placeholder="Ecrire un commentaire ...">
-                                        <button type="submit" class="btn btn-primary">Envoyer <i class="bi bi-send-fill"></i></button>
+                                        <button type="submit" class="btn btn-primary">Envoyer <i
+                                                class="bi bi-send-fill"></i></button>
                                     </div>
-                                    <small class="text-danger" v-if="this.newMessage.length > 256">Le commentaire ne doit pas
+                                    <small class="text-danger" v-if="this.newMessage.length > 256">Le commentaire ne doit
+                                        pas
                                         dépasser
                                         256 caractères.</small>
                                 </form>
@@ -56,18 +58,18 @@
                     </div>
                 </div>
 
-                <div class="col-md-6">
-                    <div class="col-md-12">
-                        <div class="card width100" style="max-height: 20rem; min-height: 20rem;">
+                <div class="col-md-6 col">
+                    <div class="col-md-12" style="max-height: 20rem; min-height: 20rem;">
+                        <div class="card width100" :class="[isAuthor ? cardEventAuthor : cardEventParticipant]">
                             <div class="card-header">
                                 <strong>Participants</strong>
                             </div>
                             <div class="card-body overflow-auto">
-                                <div v-for="participant in participants" :key="participant.uid">
+                                <div v-for="participant in             participants" :key="participant.uid">
                                     <strong
                                         :class="{ 'text-success': participant.status === 'accepted', 'text-danger': participant.status === 'declined', 'text-info': participant.status === 'pending' }">{{
-                                            participant.status }} </strong> : {{ participant.name + " " +
-        participant.firstname }}
+                                            participant.status }} </strong> : {{ participant.name + " " + participant.firstname
+    }}
                                 </div>
                             </div>
                             <div class="card-footer" v-if="!isAuthor">
@@ -76,45 +78,48 @@
 
                                 <div class="input-group row widthAuto">
                                     <div class="col-md-6">
-                                        <button v-on:click="acceptEvent" class="btn btn-success col-12"><i class="bi bi-check-lg"></i></button>
+                                        <button v-on:click="acceptEvent" class="btn btn-success col-12"><i
+                                                class="bi bi-check-lg"></i></button>
                                     </div>
                                     <div class="col-md-6">
-                                        <button v-on:click="deniedEvent" class="btn btn-danger col-12"><i class="bi bi-x-lg"></i></button>
+                                        <button v-on:click="deniedEvent" class="btn btn-danger col-12"><i
+                                                class="bi bi-x-lg"></i></button>
                                     </div>
                                 </div>
 
                                 <small class="text-danger" v-if="this.acceptMessage.length > 256">Le commentaire ne doit pas
-                                        dépasser
-                                        256 caractères.</small>
+                                    dépasser
+                                    256 caractères.</small>
                             </div>
 
-                            <div class="card-footer" v-else>
-                                <div class="input-group row widthAuto">
-                                    <p>
-                                        <strong>Sélection d'un membre</strong>
-                                    </p>
-                                    <select class="select" size="4" v-model="newParticipant">
-                                        <option v-for="participant in allParticipants" :key="participant.id"
-                                            :value=participant>
-                                            {{ participant.name + " " + participant.firstname }}
-                                        </option>
-                                    </select>
-                                    <div class="input-group">
-                                        <button v-on:click="addParticipant" type="submit"
-                                            class="btn btn-primary col-12"><i class="bi bi-plus-circle"></i></button>
-                                    </div>
+                        </div>
+
+                        <div class="card width100" :class="[isAuthor ? cardEventAuthor : cardEventParticipant]"
+                            v-if="isAuthor">
+                            <div class="input-group row">
+                                <div class="card-header">
+                                    <strong>Sélection d'un membre</strong>
+                                </div>
+                                <select class="select" size="4" v-model="newParticipant">
+                                    <option v-for="participant in             allParticipants" :key="participant.id"
+                                        :value=participant>
+                                        {{ participant.name + " " + participant.firstname }}
+                                    </option>
+                                </select>
+                                <div class="input-group">
+                                    <button v-on:click="addParticipant" type="submit" class="btn btn-primary col-12"><i
+                                            class="bi bi-plus-circle"></i></button>
                                 </div>
                             </div>
-
                         </div>
                     </div>
                 </div>
             </div>
-                <div v-if="isAuthor" class="input-group m-3">
-                    <span class="input-group-text">Lien de partage : <i class="bi bi-link-45deg"></i> </span>
-                    <input type="text" class="form-control"  ref="clone"  :value="link" disabled>
-                    <button type="submit" class="btn btn-primary" @click="copy()"><i class="bi bi-clipboard"></i></button>
-                </div>
+            <div v-if="isAuthor" class="input-group m-3">
+                <span class="input-group-text">Lien de partage : <i class="bi bi-link-45deg"></i> </span>
+                <input type="text" class="form-control" ref="clone" :value="link" disabled>
+                <button type="submit" class="btn btn-primary" @click="copy()"><i class="bi bi-clipboard"></i></button>
+            </div>
         </div>
     </div>
     <Footer />
@@ -151,6 +156,8 @@ export default {
             lattitude: "48.6937223",
             marker: null,
             map: null,
+            cardEventAuthor: "cardEventAuthor",
+            cardEventParticipant: "cardEventParticipant",
         }
     },
 
@@ -219,7 +226,11 @@ export default {
                     zoom: 13,
                 });
 
-                this.marker = new mapboxgl.Marker().setLngLat([this.event.posY, this.event.posX]).addTo(this.map);
+                const popupEvent = new mapboxgl.Popup({ offset: 25 }).setText(
+                    "Lieu de l'évènement"
+                );
+
+                this.marker = new mapboxgl.Marker().setLngLat([this.event.posY, this.event.posX]).setPopup(popupEvent).addTo(this.map);
 
                 this.map.on('load', () => {
                     this.map.addSource('poi-source', {

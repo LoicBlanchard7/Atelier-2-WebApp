@@ -8,13 +8,13 @@
         </div>
         <div v-else>
             <div class="btn-toolbar justify-content-center m-3 p-1" role="group" aria-label="Basic example">
-                <button type="button" class="btn btn-primary m-1" :disabled="tousDisabled"
+                <button type="button" class="btn btn-primary m-1" :disabled="allDisabled"
                     @click="setFilter('Tous')">Tous</button>
-                <button type="button" class="btn btn-primary  m-1" :disabled="aVenirDisabled"
+                <button type="button" class="btn btn-primary  m-1" :disabled="toComeDisabled"
                     @click="setFilter('A venir')">A venir</button>
-                <button type="button" class="btn btn-primary  m-1" :disabled="enAttenteDisabled"
+                <button type="button" class="btn btn-primary  m-1" :disabled="pendingDisabled"
                     @click="setFilter('En attente')">En attente</button>
-                <button type="button" class="btn btn-primary  m-1" :disabled="creeParMoiDisabled"
+                <button type="button" class="btn btn-primary  m-1" :disabled="myEventDisabled"
                     @click="setFilter('Crée par moi')">Crée par moi</button>
             </div>
 
@@ -78,7 +78,6 @@ export default {
             eventCreatedByUser: [],
             eventParticipate: [],
             eventPending: [],
-
         }
     },
     computed: {
@@ -113,7 +112,7 @@ export default {
             }
         },
 
-        tousDisabled() {
+        allDisabled() {
             if (this.filtre === "Tous") {
                 return true;
             } else {
@@ -121,7 +120,7 @@ export default {
             }
         },
 
-        aVenirDisabled() {
+        toComeDisabled() {
             if (this.filtre === "A venir") {
                 return true;
             } else {
@@ -129,7 +128,7 @@ export default {
             }
         },
 
-        enAttenteDisabled() {
+        pendingDisabled() {
             if (this.filtre === "En attente") {
                 return true;
             } else {
@@ -137,7 +136,7 @@ export default {
             }
         },
 
-        creeParMoiDisabled() {
+        myEventDisabled() {
             if (this.filtre === "Crée par moi") {
                 return true;
             } else {
@@ -158,7 +157,6 @@ export default {
 
                 this.events = res.data;
 
-
                 const linkCreatedByUser = "http://iut.netlor.fr/event/getEventByUser/" + this.userUid;
                 const resCreatedByUser = await axios.get(linkCreatedByUser, {
                     headers: { Authorization: `Bearer ${this.userToken}` }
@@ -175,7 +173,6 @@ export default {
         },
 
         goToEvent(id) {
-            // console.log(id);
             this.$router.push({ name: 'Event', params: { id: id } });
         },
 
@@ -196,9 +193,8 @@ export default {
                 return "text-danger";
             }
         }
-
-
     },
+
     created() {
         let acc = JSON.parse(sessionStorage.getItem('account'));
         if (acc !== null) {
