@@ -85,14 +85,14 @@ export default {
   },
   computed: {
     isValide() {
-      if (this.name.length >= 20 || this.name.length === 0 || this.firstname.length >= 20 || this.firstname.length === 0) {
+      if (this.name.length > 20 || this.name.length === 0 || this.firstname.length > 20 || this.firstname.length === 0) {
         return false;
       } else {
         return true;
       }
     },
     isValidePassword(){
-      if(this.password.length <8 || this.password.length > 30 || this.password !== this.confirmpassword){
+      if(this.password.length < 8 || this.password.length > 30 || this.password !== this.confirmpassword){
         return false;
       }else{
         return true;

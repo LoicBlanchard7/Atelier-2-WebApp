@@ -13,8 +13,8 @@
                                 <label for="name">Nom :</label>
                                 <input type="text" class="form-control" id="name" v-model="name" required>
                                 <div class="mt-2">
-                                    <small class="text-danger" v-if="this.name.length >= 50">Le prénom ne doit pas dépasser
-                                        50
+                                    <small class="text-danger" v-if="this.name.length > 20">Le prénom ne doit pas dépasser
+                                        20
                                         caractères</small>
                                     <small class="text-danger" v-if="this.name.length === 0">Le prénom doit faire au minimum
                                         1
@@ -24,10 +24,10 @@
 
                             <div class="form-group">
                                 <label for="name">Prénom :</label>
-                                <input type="text" class="form-control" id="name" v-model="firstname" required>
+                                <input type="text" class="form-control" id="firstname" v-model="firstname" required>
                                 <div class="mt-2">
-                                    <small class="text-danger" v-if="this.firstname.length >= 50">Le prénom ne doit pas
-                                        dépasser 50
+                                    <small class="text-danger" v-if="this.firstname.length > 20">Le prénom ne doit pas
+                                        dépasser 20
                                         caractères</small>
                                     <small class="text-danger" v-if="this.firstname.length === 0">Le prénom doit faire au
                                         minimum 1
@@ -38,21 +38,26 @@
                             <div class="form-group">
                                 <label for="email">E-mail :</label>
                                 <input type="email" class="form-control" id="email" v-model="email" required>
-                                <div v-if="!isValidEmail" class="invalid-feedback">
-                                    Veuillez entrer une adresse e-mail valide.
+                                <div class="mt-2">
+                                    <small class="text-danger" v-if="!isValidEmail">Veuillez renseigné un email valide.</small>
+                                    
                                 </div>
                             </div>
 
                             <div class="form-group">
                                 <label for="password">Mot de passe :</label>
                                 <input type="password" class="form-control" id="password" v-model="password" required>
-                                <div v-if="!isValidPassword" class="invalid-feedback">
-                                    Le mot de passe doit contenir au moins 8 caractères.
+                                <div class="mt-2">
+                                    <small class="text-danger" v-if="this.password.length > 30">Le mot de passe ne doit pas
+                                        dépasser 30
+                                        caractères</small>
+                                    <small class="text-danger" v-if="this.password.length < 8">Le mot de passe doit faire 8
+                                        caractères</small>
                                 </div>
                             </div>
 
                             <button type="button" class="btn btn-primary btn-block marginT" @click="addAccount()"
-                                :disabled="isValidInfo == false || isValidEmail == false || isValidPassword == false">S'inscrire</button>
+                                :disabled="isValidInfo == false || isValidEmail == false">S'inscrire</button>
 
                             <br />
                             <small class="errorMessage marginT">{{ this.errorMessage }}</small>
@@ -85,13 +90,8 @@ export default {
             const validEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
             return validEmail.test(this.email);
         },
-        isValidPassword() {
-            if (this.password.length > 7)
-                return true
-            else return false;
-        },
         isValidInfo() {
-            if (this.name.length >= 50 || this.name.length === 0 || this.firstname.length >= 50 || this.firstname.length === 0) {
+            if (this.name.length > 20 || this.name.length === 0 || this.firstname.length > 20 || this.firstname.length === 0 || this.password.length > 30 || this.password.length < 8) {
                 return false;
             } else {
                 return true;
