@@ -7,8 +7,8 @@
                 <div class="col-md-6">
                     <div class="col-md-12">
                         <h3 class="text-center text-muted">{{ this.event.title }}</h3>
-                        <p><strong>Auteur -</strong> {{ this.userName + " " + this.userFirstname }}</p>
-                        <p><strong>Mail -</strong> {{ this.userMail }}</p>
+                        <p><strong>Auteur -</strong> {{ this.authorName + " " + this.authorFirstname }}</p>
+                        <p><strong>Mail -</strong> {{ this.authorMail }}</p>
 
                         <p class="text-muted">{{ new Date(this.event.date).toLocaleDateString('fr-FR', {
                             weekday: "long",
@@ -45,8 +45,12 @@
                                     <div class="input-group">
                                         <input type="text" class="form-control" v-model="newMessage"
                                             placeholder="Ecrire un commentaire ...">
+
                                         <button type="submit" class="btn btn-primary">Envoyer</button>
                                     </div>
+                                    <small class="text-danger" v-if="this.newMessage.length > 256">Le commentaire ne doit pas
+                                        dépasser
+                                        256 caractères.</small>
                                 </form>
                             </div>
                         </div>
@@ -79,6 +83,10 @@
                                         <button v-on:click="deniedEvent" class="btn btn-danger col-12">Refuser</button>
                                     </div>
                                 </div>
+
+                                <small class="text-danger" v-if="this.acceptMessage.length > 256">Le commentaire ne doit pas
+                                        dépasser
+                                        256 caractères.</small>
                             </div>
 
                             <div class="card-footer" v-else>
@@ -103,11 +111,11 @@
                     </div>
                 </div>
             </div>
-                <div v-if="isAuthor" class="input-group m-3">
-                    <span class="input-group-text">Lien de partage : </span>
-                    <input type="text" class="form-control"  ref="clone"  :value="link" disabled>
-                    <button type="submit" class="btn btn-primary" @click="copy()">COPIER</button>
-                </div>
+            <div v-if="isAuthor" class="input-group m-3">
+                <span class="input-group-text">Lien de partage : </span>
+                <input type="text" class="form-control" ref="clone" :value="link" disabled>
+                <button type="submit" class="btn btn-primary" @click="copy()">COPIER</button>
+            </div>
         </div>
     </div>
     <Footer />
@@ -131,19 +139,19 @@ export default {
             newMessage: '',
             newParticipant: '',
             event: [],
-            userToken: "",
-            userUid: "",
-            userName: "",
-            userMail: "",
-            userFirstname: "",
+            eventUid: '',
+            userToken: '',
+            userUid: '',
+            authorMail: '',
+            userName: '',
+            userFirstname: '',
+            authorName: '',
+            authorFirstname: '',
             allParticipants: [],
             longitude: "6.1792289",
             lattitude: "48.6937223",
             marker: null,
             map: null,
-            searchRadius: 500,
-            poiResults: [],
-            eventUid: '',
         }
     },
 
@@ -158,7 +166,6 @@ export default {
         },
 
         eid() { return this.$route.params.id },
-
 
         isAuthor() {
             if (this.userUid == this.event.uid) {
@@ -182,6 +189,7 @@ export default {
         if (acc !== null) {
             this.userToken = acc.access_token;
             this.userUid = acc.uid;
+            this.initUserInfo(this.userUid);
             this.initAllParticipants();
         } else if (participants !== null) {
             this.initParticipantsInfo();
@@ -201,7 +209,7 @@ export default {
                 this.event = res.data.events;
                 this.eventUid = this.event.uid;
 
-                this.initUserInfo(this.eventUid);
+                this.initAuthorInfo(this.eventUid);
 
                 mapboxgl.accessToken = 'pk.eyJ1IjoibG9sb2F0ZWxpZXIiLCJhIjoiY2xmdjRqYXl3MDNvNzNjczZoY281cnhyayJ9.aE6a7BJ_XrBE8m9oWUAw7g';
 
@@ -211,6 +219,24 @@ export default {
                     center: [this.event.posY, this.event.posX],
                     zoom: 13,
                 });
+
+                var origin = [2.3488, 48.8534];
+
+                this.directions = new MapboxDirections({
+                    accessToken: mapboxgl.accessToken,
+                    unit: 'metric',
+                    profile: 'mapbox/driving-traffic',
+                    controls: {
+
+                        instructions: true
+                    },
+                    waypoints: [
+                        { coordinates: origin }
+                    ]
+                });
+
+                this.map.addControl(this.directions, 'top-left');
+
 
                 this.marker = new mapboxgl.Marker().setLngLat([this.event.posY, this.event.posX]).addTo(this.map);
 
@@ -293,14 +319,25 @@ export default {
             }
         },
 
+        async initAuthorInfo(uid) {
+            try {
+                const user = await axios
+                    .get(`http://iut.netlor.fr/auth/userId/` + uid);
+                this.authorFirstname = user.data.user.firstname;
+                this.authorName = user.data.user.name;
+                this.authorMail = user.data.user.email;
+
+            } catch (err) {
+                console.log(err);
+            }
+        },
+
         async initUserInfo(uid) {
             try {
                 const user = await axios
                     .get(`http://iut.netlor.fr/auth/userId/` + uid);
                 this.userFirstname = user.data.user.firstname;
                 this.userName = user.data.user.name;
-                this.userMail = user.data.user.email;
-
             } catch (err) {
                 console.log(err);
             }
@@ -320,7 +357,7 @@ export default {
         },
 
         async sendMessage(message) {
-            if (message !== '') {
+            if (message !== '' && message.length < 257) {
                 try {
                     const link = ` http://iut.netlor.fr/Participants/comment/add`;
 
@@ -413,7 +450,7 @@ export default {
 
         },
 
-        copy(){
+        copy() {
             navigator.clipboard.writeText(this.link);
             alert("Copied the text: " + this.link);
         }
