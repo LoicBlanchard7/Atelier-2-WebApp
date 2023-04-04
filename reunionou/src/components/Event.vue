@@ -91,7 +91,6 @@
                                     dépasser
                                     256 caractères.</small>
                             </div>
-
                         </div>
 
                         <div class="card width100" :class="[isAuthor ? cardEventAuthor : cardEventParticipant]"
@@ -100,19 +99,14 @@
                                 <div class="card-header">
                                     <strong>Sélection d'un membre</strong>
                                 </div>
-                                
-                                    <select class="select card-text" size="4" v-model="newParticipant">
-                                        <option v-for="participant in             allParticipants" :key="participant.id"
-                                            :value=participant>
-                                            {{ participant.name + " " + participant.firstname }}
-                                        </option>
-                                    </select>
-
-                                    
-                                    <button v-on:click="addParticipant" type="submit" class="btn btn-primary addButton col-12"><i
-                                            class="bi bi-plus-circle"></i></button>
-                                   
-                            
+                                <select class="select card-text" size="4" v-model="newParticipant">
+                                    <option v-for="participant in             allParticipants" :key="participant.id"
+                                        :value=participant>
+                                        {{ participant.name + " " + participant.firstname }}
+                                    </option>
+                                </select>
+                                <button v-on:click="addParticipant" type="submit"
+                                    class="btn btn-primary addButton col-12"><i class="bi bi-plus-circle"></i></button>
                             </div>
                         </div>
                     </div>
@@ -133,7 +127,7 @@ import axios from 'axios';
 import NavBar from './NavBar.vue';
 import mapboxgl from 'mapbox-gl';
 import Footer from './Footer.vue';
-import { inject} from 'vue';
+import { inject } from 'vue';
 
 export default {
     name: 'EventPage',
@@ -162,11 +156,15 @@ export default {
             map: null,
             cardEventAuthor: "cardEventAuthor",
             cardEventParticipant: "cardEventParticipant",
-            apiLink : inject('apiLink')
+            apiLink: inject('apiLink')
         }
     },
 
     computed: {
+        /**
+         * Méthode permettant de déterminer si l'utilisateur est connecté à l'application.
+         * @return : true si l'utilisateur est connecté, false si l'utilisateur n'est pas connecté.
+         */
         isConnected() {
             let acc = JSON.parse(sessionStorage.getItem('account'));
             if (acc !== null) {
@@ -176,8 +174,16 @@ export default {
             }
         },
 
+        /**
+         * Méthode permettant de récupérer l'id de l'évènement placé en paramètre.
+         * @return : L'id de l'évènement placé en paramètre
+         */
         eid() { return this.$route.params.id },
 
+        /**
+         * Méthode permettant de déterminer si l'utilisateur connecté est le créateur de l'évènement.
+         * @return : true si l'utilisateur est l'auteur, false si l'utilisateur n'est pas l'auteur.
+         */
         isAuthor() {
             if (this.userUid == this.event.uid) {
                 return true;
@@ -186,9 +192,17 @@ export default {
             }
         },
 
+        /**
+         * Méthode permettant de renvoyer le lien de partage de l'événement
+         * @return : Lien de partage de l'évènement
+         */
         link() { return "http://localhost:8080/partage/event/" + this.eid },
     },
 
+    /**
+     * Récupère les données de l'utilisateur connecté.
+     * @return: vide
+     */
     created() {
         let acc = JSON.parse(sessionStorage.getItem('account'));
         let participants = JSON.parse(sessionStorage.getItem('participantsUid'));
@@ -211,9 +225,14 @@ export default {
     },
 
     methods: {
+        /**
+         * Méthode permettant de récupérer les données de l'évènement afin de les afficher.
+         * Instancie la carte avec le point de rendez-vous de l'évènement.
+         * @return : vide
+         */
         async initEvent() {
             try {
-                const link = this.apiLink+`/event/getEvent/` + this.eid;
+                const link = this.apiLink + `/event/getEvent/` + this.eid;
 
                 const res = await axios.get(link);
 
@@ -269,9 +288,13 @@ export default {
             }
         },
 
+        /**
+         * Méthode permettant d'ajouter tous les participants à la liste des participants invitable.
+         * @return : vide
+         */
         async initParticipants() {
             try {
-                const link = this.apiLink+`/participants/event/` + this.eid;
+                const link = this.apiLink + `/participants/event/` + this.eid;
 
                 const res = await axios.get(link);
 
@@ -284,9 +307,13 @@ export default {
             }
         },
 
+        /**
+         * Méthode permettant de récupérer tous les commentaires d'un évènement.
+         * @return : vide
+         */
         async initComments() {
             try {
-                const link = this.apiLink+`/participants/comment/getComment/` + this.eid;
+                const link = this.apiLink + `/participants/comment/getComment/` + this.eid;
 
                 const res = await axios.get(link);
 
@@ -299,9 +326,13 @@ export default {
             }
         },
 
+        /**
+         * Méthode permettant de récupérer tous les participants.
+         * @return : vide
+         */
         async initAllParticipants() {
             try {
-                const link = this.apiLink+`/auth/`;
+                const link = this.apiLink + `/auth/`;
 
                 const res = await axios.get(link, {
                     headers: { Authorization: `Bearer ${this.userToken}` }
@@ -316,10 +347,15 @@ export default {
             }
         },
 
+        /**
+         * Méthode permettant de récupérer les données de l'auteur de l'évènement.
+         * @param {*} uid : Uid de l'auteur de l'évènement
+         * @return : vide
+         */
         async initAuthorInfo(uid) {
             try {
                 const user = await axios
-                    .get(this.apiLink+`/auth/userId/` + uid);
+                    .get(this.apiLink + `/auth/userId/` + uid);
                 this.authorFirstname = user.data.user.firstname;
                 this.authorName = user.data.user.name;
                 this.authorMail = user.data.user.email;
@@ -329,10 +365,15 @@ export default {
             }
         },
 
+        /**
+         * Méthode permettant de récupérer les données de l'utilisateur connecté.
+         * @param {*} uid : Uid de l'utilisateur connecté.
+         * @return : vide
+         */
         async initUserInfo(uid) {
             try {
                 const user = await axios
-                    .get(this.apiLink+`/auth/userId/` + uid);
+                    .get(this.apiLink + `/auth/userId/` + uid);
                 this.userFirstname = user.data.user.firstname;
                 this.userName = user.data.user.name;
             } catch (err) {
@@ -340,11 +381,15 @@ export default {
             }
         },
 
+        /**
+         * Méthode permettant de récupérer les données des participants.
+         * @return : vide
+         */
         async initParticipantsInfo() {
             try {
                 let uuid = JSON.parse(sessionStorage.getItem('participantsUid'));
                 const participants = await axios
-                    .get(this.apiLink+`/participants/getParticipant/` + uuid);
+                    .get(this.apiLink + `/participants/getParticipant/` + uuid);
                 this.userFirstname = participants.data.participants[0].firstname;
                 this.userName = participants.data.participants[0].name;
                 this.userUid = participants.data.participants[0].uid;
@@ -353,10 +398,15 @@ export default {
             }
         },
 
+        /**
+         * Méthode permettant d'envoyer un commentaire.
+         * @param {*} message : Message à envoyer
+         * @return : vide
+         */
         async sendMessage(message) {
             if (message !== '' && message.length < 257) {
                 try {
-                    const link = this.apiLink+`/Participants/comment/add`;
+                    const link = this.apiLink + `/Participants/comment/add`;
 
                     await axios
                         .post(link, {
@@ -377,10 +427,14 @@ export default {
             }
         },
 
+        /**
+         * Méthode permettant d'ajouter un participant à un évènement à partir de la liste de tous les évènements.
+         * @return : vide
+         */
         async addParticipant() {
             if (this.newParticipant !== '') {
                 try {
-                    const link = this.apiLink+`/participants/add`;
+                    const link = this.apiLink + `/participants/add`;
 
                     await axios
                         .post(link, {
@@ -399,9 +453,13 @@ export default {
             }
         },
 
+        /**
+         * Méthode permettant d'accepter l'invitation à un évènement.
+         * @return : vide
+         */
         async acceptEvent() {
             try {
-                const link = this.apiLink+`/Participants/accept`;
+                const link = this.apiLink + `/Participants/accept`;
                 await axios
                     .put(link, {
                         uid: this.userUid,
@@ -422,9 +480,13 @@ export default {
             }
         },
 
+        /**
+         * Méthode permettant de refuser l'invitation à un évènement.
+         * @return : vide
+         */
         async deniedEvent() {
             try {
-                const link = this.apiLink+`/Participants/accept`;
+                const link = this.apiLink + `/Participants/accept`;
 
                 await axios
                     .put(link, {
@@ -447,6 +509,11 @@ export default {
 
         },
 
+        /**
+         * Méthode permettant de copier le lien de partage de l'évènement.
+         * Affiche une alerte dans le navigateur lors de la copie.
+         * @return : vide
+         */
         copy() {
             navigator.clipboard.writeText(this.link);
             alert("Le lien a bien été copiée: " + this.link);

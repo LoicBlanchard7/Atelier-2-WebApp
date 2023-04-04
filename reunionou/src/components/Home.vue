@@ -15,7 +15,7 @@
                 <button type="button" class="btn btn-primary  m-1" :disabled="pendingDisabled"
                     @click="setFilter('En attente')">En attente</button>
                 <button type="button" class="btn btn-primary  m-1" :disabled="myEventDisabled"
-                    @click="setFilter('Crée par moi')">Crée par moi</button>
+                    @click="setFilter('Mes évènements')">Mes évènements</button>
             </div>
 
             <div class="card-group justify-content-center justify-content-xxl-start">
@@ -84,6 +84,10 @@ export default {
         }
     },
     computed: {
+        /**
+         * Méthode permettant de déterminer si l'utilisateur est connecté à l'application.
+         * @return : true si l'utilisateur est connecté, false si l'utilisateur n'est pas connecté.
+         */
         isConnected() {
             let acc = JSON.parse(sessionStorage.getItem('account'));
             if (acc !== null) {
@@ -93,6 +97,10 @@ export default {
             }
         },
 
+        /**
+         * Méthode permettant de trier les évènements à afficher selon le tri sélectionné.
+         * @return : Les évènements filtrer
+         */
         eventToShow() {
             if (this.filter === "A venir") {
                 return this.events.filter(event => new Date(event.event.date) > new Date());
@@ -105,8 +113,12 @@ export default {
             }
         },
 
+        /**
+         * Méthode permettant de déterminer les évènements créé par l'utilisateur
+         * @return : Les évènements créé par l'utilisateur
+         */
         eventCreatedByUserToShow() {
-            if (this.filter === "Crée par moi" || this.filter === "Tous") {
+            if (this.filter === "Mes évènements" || this.filter === "Tous") {
                 return this.eventCreatedByUser;
             } else if (this.filter === "A venir") {
                 return this.eventCreatedByUser.filter(event => new Date(event.date) > new Date());
@@ -115,6 +127,10 @@ export default {
             }
         },
 
+        /**
+         * Méthode permettant de déterminer si le filtrer déterminer est "Tous"
+         * @return : true si c'est ce filtre, false si ce n'est pas ce filtre
+         */
         allDisabled() {
             if (this.filter === "Tous") {
                 return true;
@@ -123,6 +139,10 @@ export default {
             }
         },
 
+        /**
+         * Méthode permettant de déterminer si le filtrer déterminer est "A venir"
+         * @return : true si c'est ce filtre, false si ce n'est pas ce filtre
+         */
         toComeDisabled() {
             if (this.filter === "A venir") {
                 return true;
@@ -131,6 +151,10 @@ export default {
             }
         },
 
+        /**
+         * Méthode permettant de déterminer si le filtrer déterminer est "En attente"
+         * @return : true si c'est ce filtre, false si ce n'est pas ce filtre
+         */
         pendingDisabled() {
             if (this.filter === "En attente") {
                 return true;
@@ -139,17 +163,23 @@ export default {
             }
         },
 
+        /**
+         * Méthode permettant de déterminer si le filtrer déterminer est "Mes évènements"
+         * @return : true si c'est ce filtre, false si ce n'est pas ce filtre
+         */
         myEventDisabled() {
-            if (this.filter === "Crée par moi") {
+            if (this.filter === "Mes évènements") {
                 return true;
             } else {
                 return false;
             }
         }
-
-
     },
     methods: {
+        /**
+         * Méthode permettant de récupèrer les données des évènements et les affiche.
+         * @return : vide
+         */
         async GetEventData() {
             try {
                 const link = this.apiLink+"/Participants/user/" + this.userUid;
@@ -176,18 +206,33 @@ export default {
             }
         },
 
+        /**
+         * Méthode permettant d'accèder à la page de visualisation d'un évènement.
+         * @param {*} id : Id de l'évènement
+         */
         goToEvent(id) {
             this.$router.push({ name: 'Event', params: { id: id } });
         },
 
+        /**
+         * Méthode permettant d'accèder à la page de modification d'un évènement.
+         * @param {*} id : Id de l'évènement
+         */
         UpdateEvent(id) {
             this.$router.push({ name: 'UpdateEvent', params: { id: id } });
         },
 
+        /**
+         * Méthode permettant de définir le filtre des évènements.
+         */
         setFilter(filter) {
             this.filter = filter;
         },
 
+        /**
+         * Méthode permettant de définir le status de l'utilisateur par rapport aux évènements.
+         * @param {*} status 
+         */
         showStatus(status) {
             if (status === "accepted") {
                 return "text-success";
@@ -199,6 +244,10 @@ export default {
         }
     },
 
+    /**
+     * Récupère les données de l'utilisateur connecté.
+     * @return : vide
+     */
     created() {
         let acc = JSON.parse(sessionStorage.getItem('account'));
         if (acc !== null) {

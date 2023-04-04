@@ -96,6 +96,10 @@ export default {
     },
 
     computed: {
+        /**
+         * Méthode permettant de déterminer si l'utilisateur est connecté à l'application.
+         * @return : true si l'utilisateur est connecté, false si l'utilisateur n'est pas connecté.
+         */
         isConnected() {
             let acc = JSON.parse(sessionStorage.getItem('account'));
             if (acc !== null) {
@@ -106,8 +110,11 @@ export default {
         }
     },
 
+    /**
+     * Permet d'instancier la carte.
+     * @return : vide
+     */
     mounted() {
-
         mapboxgl.accessToken = 'pk.eyJ1IjoibG9sb2F0ZWxpZXIiLCJhIjoiY2xmdjRqYXl3MDNvNzNjczZoY281cnhyayJ9.aE6a7BJ_XrBE8m9oWUAw7g';
 
         this.map = new mapboxgl.Map({
@@ -128,6 +135,10 @@ export default {
     },
 
     methods: {
+        /**
+         * Méthode permettant de créer un nouvel évènement avec les données du formulaire.
+         * @return : vide
+         */
         async createEvent() {
             if (this.title != '' && this.description != '' && this.lattitude != null && this.longitude != null && this.date != '' && this.time != '' && this.description.length < 257 && this.title.length < 129) {
                 let acc = JSON.parse(sessionStorage.getItem('account'));
@@ -162,6 +173,11 @@ export default {
             }
         },
 
+        /**
+         * Méthode permettant d'ajouter le point de l'évènement à partir de l'adresse placé dans le champ.
+         * Recentre la carte sur le point choisi. 
+         * @return : vide
+         */
         async addMarkerFromAddress(address) {
 
             const client = MapboxClient({ accessToken: 'pk.eyJ1IjoibG9sb2F0ZWxpZXIiLCJhIjoiY2xmdjRqYXl3MDNvNzNjczZoY281cnhyayJ9.aE6a7BJ_XrBE8m9oWUAw7g' });
@@ -185,12 +201,22 @@ export default {
 
             this.map.flyTo({ center });
         },
+
+        /**
+         * Méthode permettant d'appeler la méthode d'ajout du point de rendez-vous de l'évènement à partir de l'adresse placé dans le champ.
+         * Appele la méthode si le champ n'est pas vide.
+         * @return : vide
+         */
         onSubmit() {
             if (this.address != '') {
                 this.addMarkerFromAddress(this.address);
             }
         },
 
+        /**
+         * Méthode permettant de remettre à zéro le formulaire de modification d'évènement.
+         * @return : vide
+         */
         resetForm() {
             this.title = '';
             this.description = '';
@@ -202,4 +228,3 @@ export default {
     },
 };
 </script>
-<style></style>

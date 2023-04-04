@@ -42,6 +42,10 @@
 export default {
   name: 'NavBar',
   computed: {
+    /**
+     * Méthode permettant de vérifier si l'utilisateur est connecté.
+     * @return : true si il est connecté, false si il n'est pas connecté.
+     */
     isConnect() {
         let acc = JSON.parse(sessionStorage.getItem('account'));
         if (acc) {
@@ -52,6 +56,11 @@ export default {
     },
   },
   methods: {
+    /**
+     * Méthode permettant de déconnecter l'utilisateur.
+     * Renvoie l'utilisateur sur la page d'accueil.
+     * @return : vide
+     */
     deconnect() {
       this.$store.commit('deconnect', 'Vous êtes bien déconnecté');
       sessionStorage.removeItem('account');

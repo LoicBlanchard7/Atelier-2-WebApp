@@ -8,8 +8,7 @@ import CreateEvent from '@/components/CreateEvent.vue';
 import Profil from '@/components/Profil.vue';
 import Event from '@/components/Event.vue';
 import UpdateEvent from '@/components/UpdateEvent.vue';
-
-import PartageEvent from '@/components/PartageEvent.vue';
+import PartageEvent from '@/components/ShareEvent.vue';
 
 const routes = [
 

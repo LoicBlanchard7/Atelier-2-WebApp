@@ -15,10 +15,10 @@
                                 <div class="mt-2">
                                     <small class="text-danger" v-if="this.name.length > 20">Le prénom ne doit pas dépasser
                                         20
-                                        caractères</small>
+                                        caractères.</small>
                                     <small class="text-danger" v-if="this.name.length === 0">Le prénom doit faire au minimum
                                         1
-                                        caractère</small>
+                                        caractère.</small>
                                 </div>
                             </div>
 
@@ -28,10 +28,10 @@
                                 <div class="mt-2">
                                     <small class="text-danger" v-if="this.firstname.length > 20">Le prénom ne doit pas
                                         dépasser 20
-                                        caractères</small>
+                                        caractères.</small>
                                     <small class="text-danger" v-if="this.firstname.length === 0">Le prénom doit faire au
                                         minimum 1
-                                        caractère</small>
+                                        caractère.</small>
                                 </div>
                             </div>
 
@@ -39,7 +39,7 @@
                                 <label for="email">E-mail :</label>
                                 <input type="email" class="form-control" id="email" v-model="email" required>
                                 <div class="mt-2">
-                                    <small class="text-danger" v-if="!isValidEmail">Veuillez renseigné un email valide.</small>
+                                    <small class="text-danger" v-if="!isValidEmail">Veuillez renseigner un email valide.</small>
                                     
                                 </div>
                             </div>
@@ -50,9 +50,9 @@
                                 <div class="mt-2">
                                     <small class="text-danger" v-if="this.password.length > 30">Le mot de passe ne doit pas
                                         dépasser 30
-                                        caractères</small>
+                                        caractères.</small>
                                     <small class="text-danger" v-if="this.password.length < 8">Le mot de passe doit faire 8
-                                        caractères</small>
+                                        caractères.</small>
                                 </div>
                             </div>
 
@@ -73,7 +73,7 @@
 import axios from "axios";
 import NavBar from './NavBar.vue';
 import Footer from './Footer.vue';
-import { inject} from 'vue';
+import { inject } from 'vue';
 
 export default {
     name: 'SignUp',
@@ -89,10 +89,19 @@ export default {
         };
     },
     computed: {
+        /**
+         * Méthode permettant de vérifier si l'adresse mail saisi est valide.
+         * @return : true si l'adresse est valide, false si l'adresse n'est pas valide.
+         */
         isValidEmail() {
             const validEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
             return validEmail.test(this.email);
         },
+
+        /**
+         * Méthode permettant de vérifier si le nom, le prénom et le mot de passe à une taille valide.
+         * @return : true si ils sont valide, false si ils ne sont pas valide.
+         */
         isValidInfo() {
             if (this.name.length > 20 || this.name.length === 0 || this.firstname.length > 20 || this.firstname.length === 0 || this.password.length > 30 || this.password.length < 8) {
                 return false;
@@ -102,6 +111,10 @@ export default {
         }
     },
     methods: {
+        /**
+         * Méthode permettant de créer un nouveau compte en récupérant les données du formulaire d'inscription.
+         * @return : vide
+         */
         addAccount() {
             if (this.isValidInfo || this.isValidEmail || this.isValidPassword) {
                 if (this.name === '' || this.email === '' || this.password === '' || this.firstname === '' || this.password.length < 8) {
@@ -114,7 +127,6 @@ export default {
                         email: this.email,
                         password: this.password
                     }).then(() => {
-
                         this.resetForm();
                         this.errorMessage = '';
                         this.$store.commit('newAccount', 'Votre compte a bien été créé. Vous pouvez maintenant vous connecter.');
@@ -128,12 +140,17 @@ export default {
                 }
             }
         },
+
+        /**
+         * Méthode permettant de remettre à zéro le formulaire d'inscription.
+         * @return : vide
+         */
         resetForm() {
             this.name = '';
+            this.firstname = '';
             this.email = '';
             this.password = '';
         }
     },
 };
 </script>
-<style></style>

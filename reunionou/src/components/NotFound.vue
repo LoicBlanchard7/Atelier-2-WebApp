@@ -11,12 +11,10 @@
                 <p>La page que vous avez demandé n'existe pas.</p>
 
                 <router-link to="/">Retour à la Home page</router-link>
-
             </div>
         </div>
     </div>
     <Footer/>
-
 </template>
 
 <script>
@@ -27,7 +25,3 @@ export default {
     components: {NavBar,Footer},
 }
 </script>
-
-<style>
-
-</style>

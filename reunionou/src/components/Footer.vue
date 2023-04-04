@@ -10,14 +10,5 @@
 
 export default {
   name: 'FooterElement',
-  computed: {
-    
-  },
-  methods: {
-    
-  }
 }
 </script>
-<style>
-
-</style>
