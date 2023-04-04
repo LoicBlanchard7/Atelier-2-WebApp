@@ -76,7 +76,7 @@ export default {
             userToken: "",
             userRefresh: "",
             events: [],
-            filtre: "Tous",
+            filter: "Tous",
             eventCreatedByUser: [],
             eventParticipate: [],
             eventPending: [],
@@ -94,11 +94,11 @@ export default {
         },
 
         eventToShow() {
-            if (this.filtre === "A venir") {
+            if (this.filter === "A venir") {
                 return this.events.filter(event => new Date(event.event.date) > new Date());
-            } else if (this.filtre === "En attente") {
+            } else if (this.filter === "En attente") {
                 return this.events.filter(event => event.status === "pending");
-            } else if (this.filtre === "Tous") {
+            } else if (this.filter === "Tous") {
                 return this.events;
             } else {
                 return [];
@@ -106,9 +106,9 @@ export default {
         },
 
         eventCreatedByUserToShow() {
-            if (this.filtre === "Crée par moi" || this.filtre === "Tous") {
+            if (this.filter === "Crée par moi" || this.filter === "Tous") {
                 return this.eventCreatedByUser;
-            } else if (this.filtre === "A venir") {
+            } else if (this.filter === "A venir") {
                 return this.eventCreatedByUser.filter(event => new Date(event.date) > new Date());
             } else {
                 return [];
@@ -116,7 +116,7 @@ export default {
         },
 
         allDisabled() {
-            if (this.filtre === "Tous") {
+            if (this.filter === "Tous") {
                 return true;
             } else {
                 return false;
@@ -124,7 +124,7 @@ export default {
         },
 
         toComeDisabled() {
-            if (this.filtre === "A venir") {
+            if (this.filter === "A venir") {
                 return true;
             } else {
                 return false;
@@ -132,7 +132,7 @@ export default {
         },
 
         pendingDisabled() {
-            if (this.filtre === "En attente") {
+            if (this.filter === "En attente") {
                 return true;
             } else {
                 return false;
@@ -140,7 +140,7 @@ export default {
         },
 
         myEventDisabled() {
-            if (this.filtre === "Crée par moi") {
+            if (this.filter === "Crée par moi") {
                 return true;
             } else {
                 return false;
@@ -185,7 +185,7 @@ export default {
         },
 
         setFilter(filter) {
-            this.filtre = filter;
+            this.filter = filter;
         },
 
         showStatus(status) {
