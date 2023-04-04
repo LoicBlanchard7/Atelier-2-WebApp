@@ -31,19 +31,32 @@
           </div>
         </div>
       </div>
+      <button type="button" class="btn btn-secondary mt-3 mb-3" @click="this.update()"
+        v-bind:disabled="isValide == false">Sauvegarder les modifications</button>
+      <p class="newAccountMessage">{{ this.message }}</p>
+      <h4>Modification du mot de passe</h4>
       <div class="form-group row mt-2 mb-2">
         <label for="inputPassword" class="col-sm-2 col-form-label">Mot de passe :</label>
         <div class="col-sm-10">
-          <input type="text" class="form-control" id="inputPassword" v-model="this.password">
-          <small class="text-secondary" >Laissez le champs vide pour ne pas modifié le mot de passe.</small>
-          <div class="d-flex mt-2">
+          <input type="password" class="form-control" id="inputPassword" v-model="this.password">
+          <div class="d-flex  mt-2">
             <small class="text-danger" v-if="this.password.length > 1 && this.password.length <8">Le mot de passe doit faire 8 caractères</small>
           </div>
         </div>
       </div>
-      <button type="button" class="btn btn-secondary mt-3 mb-3" @click="this.update()"
-        v-bind:disabled="isValide == false">Sauvegarder les modifications</button>
-      <p class="newAccountMessage">{{ this.message }}</p>
+      <div class="form-group row mt-2 mb-2">
+        <label for="inputPassword" class="col-sm-2 col-form-label">Confirmation du mot de passe:</label>
+        <div class="col-sm-10">
+          <input type="password" class="form-control" id="inputPassword" v-model="this.confirmpassword">
+          <div class="d-flex flex-column mt-2">
+            <small class="text-danger text-left" v-if="this.password.length > 1 && this.password.length <8">Le mot de passe doit faire 8 caractères</small>
+            <small class="text-danger text-left" v-if="this.password !== this.confirmpassword">Le mot de passe n'est pas identique</small>
+          </div>
+        </div>
+      </div>
+      <button type="button" class="btn btn-secondary mt-3 mb-3" @click="this.updatePassword()"
+        v-bind:disabled="isValidePassword == false">Modifier le mot de passe</button>
+      <p class="newAccountMessage">{{ this.messagepassword }}</p>
     </form>
   </div>
   <Footer />
@@ -65,7 +78,9 @@ export default {
       firstname: "",
       email: "",
       password: "",
-      message: ""
+      confirmpassword: "",
+      message: "",
+      messagepassword: ""
     }
   },
   computed: {
@@ -75,8 +90,15 @@ export default {
       } else {
         return true;
       }
-    }
+    },
+    isValidePassword(){
+      if(this.password.length <8 || this.password !== this.confirmpassword){
+        return false;
+      }else{
+        return true;
+      }
   },
+},
   methods: {
     async getInfoUser() {
       try {
@@ -90,25 +112,32 @@ export default {
     },
     async update() {
       if (this.isValide) {
-        let data = {};
-        if(this.password.length === 0){
-          data = {
+        let data = {
             uid: this.uid,
             name: this.name,
             firstname: this.firstname
-          }
-        }else{
-          data = {
+          };
+        try {
+          await axios.put("http://iut.netlor.fr/auth/updateUser/", data);
+          this.message = "Les modifications ont bien été enregistrées";
+        } catch (err) {
+          console.log(err);
+        }
+      }
+    },
+    async updatePassword() {
+      if (this.isValidePassword) {
+        let data = {
             uid: this.uid,
             name: this.name,
             firstname: this.firstname,
             password: this.password
           }
-        }
         try {
           await axios.put("http://iut.netlor.fr/auth/updateUser/", data);
-          this.message = "Les modifications ont bien été enregistrées";
+          this.messagepassword = "Le mot de passe a bien été modifié";
           this.password = "";
+          this.confirmpassword = "";
         } catch (err) {
           console.log(err);
         }
