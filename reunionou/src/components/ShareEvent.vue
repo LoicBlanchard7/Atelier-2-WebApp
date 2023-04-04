@@ -96,8 +96,8 @@ export default {
     async created() {
         let acc = JSON.parse(sessionStorage.getItem('account'));
         if (acc !== null) {
-            const userFirstname = "";
-            const userName = "";
+            let userFirstname = "";
+            let userName = "";
 
             try {
                 const user = await axios
