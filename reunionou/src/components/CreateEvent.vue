@@ -19,11 +19,17 @@
                                     <label for="title" class="form-label">Titre de l'événement</label>
                                     <input type="text" class="form-control" id="title" v-model="title">
                                 </div>
+                                <small class="text-danger" v-if="this.title.length > 128">Le titre ne doit pas
+                                        dépasser
+                                        128 caractères.</small>
                                 <div class="mb-3">
                                     <label for="description" class="form-label">Description de l'événement</label>
                                     <textarea class="form-control" id="form-control" rows="3"
                                         v-model="description"></textarea>
                                 </div>
+                                <small class="text-danger" v-if="this.description.length > 256">La description ne doit pas
+                                        dépasser
+                                        256 caractères.</small>
                                 <div class="mb-3">
                                     <label for="date" class="form-label">Date de l'événement</label>
                                     <input type="date" class="form-control" id="date" v-model="date">
@@ -109,7 +115,6 @@ export default {
             zoom: 13,
         });
 
-        // Ajouter un marqueur
         this.marker = new mapboxgl.Marker().setLngLat([this.longitude, this.lattitude]).addTo(this.map);
 
         this.map.on('click', (event) => {
@@ -118,12 +123,11 @@ export default {
             this.longitude = lng;
             this.marker.setLngLat([this.longitude, this.lattitude]).addTo(this.map);
         });
-
     },
 
     methods: {
         async createEvent() {
-            if (this.title != '' && this.description != '' && this.lattitude != null && this.longitude != null && this.date != '' && this.time != '') {
+            if (this.title != '' && this.description != '' && this.lattitude != null && this.longitude != null && this.date != '' && this.time != '' && this.description.length < 257 && this.title.length < 129) {
                 let acc = JSON.parse(sessionStorage.getItem('account'));
 
                 try {
