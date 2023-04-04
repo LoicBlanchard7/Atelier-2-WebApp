@@ -83,5 +83,21 @@
     background-color: #f1eded;
 }
 
+.cardEventAuthor {
+    max-height: 8rem; 
+    min-height: 8rem;
+    margin-bottom: 1rem;
+}
+
+.cardEventParticipant {
+    max-height: 20rem; 
+    min-height: 20rem;
+}
+
+.row {
+    margin-left: 0 !important;
+}
+
+
 @import "../../node_modules/bootstrap/scss/bootstrap";
 @import "../../node_modules/bootstrap-icons/font/bootstrap-icons.css";
