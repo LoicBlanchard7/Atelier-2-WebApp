@@ -16,27 +16,28 @@
                         <div class="card-body">
                             <form @submit.prevent="updateEvent">
                                 <div class="mb-3">
-                                    <label for="title" class="form-label">Titre de l'événement</label>
-                                    <input type="text" class="form-control" id="title" v-model="this.title">
+                                    <label for="titleEvent" class="form-label">Titre de l'événement</label>
+                                    <input type="text" class="form-control" id="titleEvent" v-model="this.titleEvent">
                                 </div>
-                                <small class="text-danger" v-if="this.title.length > 128">Le titre ne doit pas
-                                        dépasser
-                                        128 caractères.</small>
+                                <small class="text-danger" v-if="this.titleEvent.length > 128">Le titre ne doit pas
+                                    dépasser
+                                    128 caractères.</small>
                                 <div class="mb-3">
-                                    <label for="description" class="form-label">Description de l'événement</label>
+                                    <label for="descriptionEvent" class="form-label">Description de l'événement</label>
                                     <textarea class="form-control" id="form-control" rows="3"
-                                        v-model="this.description"></textarea>
+                                        v-model="this.descriptionEvent"></textarea>
                                 </div>
-                                <small class="text-danger" v-if="this.description.length > 256">La description ne doit pas
-                                        dépasser
-                                        256 caractères.</small>
+                                <small class="text-danger" v-if="this.descriptionEvent.length > 256">La description ne doit
+                                    pas
+                                    dépasser
+                                    256 caractères.</small>
                                 <div class="mb-3">
-                                    <label for="date" class="form-label">Date de l'événement</label>
-                                    <input type="date" class="form-control" id="date" v-model="this.date">
+                                    <label for="dateEvent" class="form-label">Date de l'événement</label>
+                                    <input type="dateEvent" class="form-control" id="dateEvent" v-model="this.dateEvent">
                                 </div>
                                 <div class="mb-3">
-                                    <label for="time" class="form-label">Heure de l'événement</label>
-                                    <input type="time" class="form-control" id="time" v-model="this.time">
+                                    <label for="timeEvent" class="form-label">Heure de l'événement</label>
+                                    <input type="timeEvent" class="form-control" id="timeEvent" v-model="this.timeEvent">
                                 </div>
                                 <button type="submit" class="btn btn-primary">Modifier l'évènement</button>
 
@@ -81,25 +82,30 @@ export default {
 
     data() {
         return {
-            lieu: '',
-            title: '',
-            description: '',
-            date: '',
-            time: '',
+            titleEvent: '',
+            descriptionEvent: '',
+            dateEvent: '',
+            timeEvent: '',
+            posXEvent: '',
+            posYEvent: '',
+
             errorMessage: '',
             newAccountMessage: '',
             marker: null,
             map: null,
             address: '',
             token: '',
-            event: [],
-            posX: '',
-            posY: '',
             uid: '',
             apiLink : inject('apiLink'),
+            event: [],
         };
     },
 
+    /**
+    * Récupère les données de l'évènement correspondant à l'id placé dans l'url.
+    * Initialise la carte avec les données de l'évènement ainsi que les différents champs du formulaire.
+    * @return : Vide
+    */
     async created() {
         const acc = JSON.parse(sessionStorage.getItem('account'));
         this.token = acc.access_token;
@@ -115,15 +121,15 @@ export default {
             this.event = res.data.events;
 
             if (this.isAuthor()) {
-                this.title = this.event.title;
-                this.description = this.event.description;
-                this.posX = this.event.posX;
-                this.posY = this.event.posY;
+                this.titleEvent = this.event.title;
+                this.descriptionEvent = this.event.description;
+                this.posXEvent = this.event.posX;
+                this.posYEvent = this.event.posY;
 
                 const dateEvent = this.event.date;
 
-                this.time = format(new Date(dateEvent), 'HH:mm');
-                this.date = format(new Date(dateEvent), 'yyyy-MM-dd');
+                this.timeEvent = format(new Date(dateEvent), 'HH:mm');
+                this.dateEvent = format(new Date(dateEvent), 'yyyy-MM-dd');
 
                 mapboxgl.accessToken = 'pk.eyJ1IjoibG9sb2F0ZWxpZXIiLCJhIjoiY2xmdjRqYXl3MDNvNzNjczZoY281cnhyayJ9.aE6a7BJ_XrBE8m9oWUAw7g';
 
@@ -143,8 +149,6 @@ export default {
             } else {
                 this.$router.push({ name: "Home" });
             }
-
-
         } catch (err) {
             console.log(err);
             this.newAccountMessage = "";
@@ -153,8 +157,16 @@ export default {
     },
 
     computed: {
+        /**
+         * Méthode permettant de récupérer l'id de l'évènement placé en paramètre.
+         * @return : L'id de l'évènement placé en paramètre
+         */
         eid() { return this.$route.params.id },
 
+        /**
+         * Méthode permettant de déterminer si l'utilisateur est connecté à l'application.
+         * @return : true si l'utilisateur est connecté, false si l'utilisateur n'est pas connecté.
+         */
         isConnected() {
             let acc = JSON.parse(sessionStorage.getItem('account'));
             if (acc !== null) {
@@ -166,6 +178,10 @@ export default {
     },
 
     methods: {
+        /**
+         * Méthode permettant de déterminer si l'utilisateur connecté est le créateur de l'évènement.
+         * @return : true si l'utilisateur est l'auteur, false si l'utilisateur n'est pas l'auteur.
+         */
         isAuthor() {
             if (this.uid == this.event.uid) {
                 return true;
@@ -174,16 +190,22 @@ export default {
             }
         },
 
+        /**
+         * Méthode permettant de mettre à jour un évènement avec les données rentrées dans le formulaire de modification.
+         * Si les champs ne sont pas bien remplis, une erreur s'affiche à l'écran.
+         * Une fois l'évènement mis à jour, les champs sont remis à zéro et l'utilisateur est renvoyé sur la page d'accueil.
+         * @return : vide
+         */
         async updateEvent() {
-            if (this.title != '' && this.description != '' && this.posX != '' && this.posY != '' && this.date != '' && this.time != '' && this.description.length < 257 && this.title.length < 129) {
+            if (this.titleEvent != '' && this.descriptionEvent != '' && this.posXEvent != '' && this.posYEvent != '' && this.dateEvent != '' && this.timeEvent != '' && this.descriptionEvent.length < 257 && this.titleEvent.length < 129) {
                 try {
                     await axios
                         .put(this.apiLink+`/event/updateEvent`, {
-                            title: this.title,
-                            description: this.description,
-                            date: this.date.toString() + " " + this.time.toString(),
-                            posX: this.posX,
-                            posY: this.posY,
+                            title: this.titleEvent,
+                            description: this.descriptionEvent,
+                            date: this.dateEvent.toString() + " " + this.timeEvent.toString(),
+                            posX: this.posXEvent,
+                            posY: this.posYEvent,
                             eid: this.eid,
                         }, {
                             headers: { Authorization: `Bearer ${this.token}` }
@@ -192,9 +214,7 @@ export default {
                     this.errorMessage = '';
                     this.newAccountMessage = "Evènement modifié.";
                     this.resetForm();
-
                     this.$router.push('/');
-
                 } catch (err) {
                     console.log(err);
                     this.newAccountMessage = "";
@@ -206,8 +226,12 @@ export default {
             }
         },
 
+        /**
+         * Méthode permettant d'ajouter le point de l'évènement à partir de l'adresse placé dans le champ.
+         * Recentre la carte sur le point choisi. 
+         * @return : vide
+         */
         async addMarkerFromAddress(address) {
-
             const client = MapboxClient({ accessToken: 'pk.eyJ1IjoibG9sb2F0ZWxpZXIiLCJhIjoiY2xmdjRqYXl3MDNvNzNjczZoY281cnhyayJ9.aE6a7BJ_XrBE8m9oWUAw7g' });
 
             const response = await client.forwardGeocode({
@@ -219,28 +243,37 @@ export default {
 
             if (!this.marker) {
                 this.marker = new mapboxgl.Marker().setLngLat(center).addTo(this.map);
-                this.posX = center[1];
-                this.posY = center[0];
+                this.posXEvent = center[1];
+                this.posYEvent = center[0];
             } else {
                 this.marker.setLngLat(center);
-                this.posX = center[1];
-                this.posY = center[0];
+                this.posXEvent = center[1];
+                this.posYEvent = center[0];
             }
 
             this.map.flyTo({ center });
         },
 
+        /**
+         * Méthode permettant d'appeler la méthode d'ajout du point de rendez-vous de l'évènement à partir de l'adresse placé dans le champ.
+         * Appele la méthode si le champ n'est pas vide.
+         * @return : vide
+         */
         onSubmit() {
             if (this.address != '') {
                 this.addMarkerFromAddress(this.address);
             }
         },
 
+        /**
+         * Méthode permettant de remettre à zéro le formulaire de modification d'évènement.
+         * @return : vide
+         */
         resetForm() {
-            this.title = '';
-            this.description = '';
-            this.date = '';
-            this.time = '';
+            this.titleEvent = '';
+            this.descriptionEvent = '';
+            this.dateEvent = '';
+            this.timeEvent = '';
             this.lattitude = null;
             this.longitude = null;
         }
