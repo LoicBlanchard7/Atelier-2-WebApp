@@ -10,9 +10,9 @@
         </div>
       </div>
       <div class="form-group row mt-2 mb-2">
-        <label for="inputPassword" class="col-sm-2 col-form-label">Nom</label>
+        <label  class="col-sm-2 col-form-label">Nom</label>
         <div class="col-sm-10">
-          <input type="text" class="form-control" id="inputPassword" v-model="this.name">
+          <input type="text" class="form-control"  v-model="this.name">
           <div class="d-flex mt-2">
             <small class="text-danger" v-if="this.name.length > 20">Le nom ne doit pas dépasser 20 caractères</small>
             <small class="text-danger" v-if="this.name.length === 0">Le nom doit faire au minimum 1 caractère</small>
@@ -20,9 +20,9 @@
         </div>
       </div>
       <div class="form-group row mt-2 mb-2">
-        <label for="inputPassword" class="col-sm-2 col-form-label">Prénom</label>
+        <label  class="col-sm-2 col-form-label">Prénom</label>
         <div class="col-sm-10">
-          <input type="text" class="form-control" id="inputPassword" v-model="this.firstname">
+          <input type="text" class="form-control"  v-model="this.firstname">
           <div class="d-flex mt-2">
             <small class="text-danger" v-if="this.firstname.length > 20">Le prénom ne doit pas dépasser 20
               caractères</small>
@@ -36,9 +36,9 @@
       <p class="newAccountMessage">{{ this.message }}</p>
       <h4>Modification du mot de passe</h4>
       <div class="form-group row mt-2 mb-2">
-        <label for="inputPassword" class="col-sm-2 col-form-label">Mot de passe :</label>
+        <label class="col-sm-2 col-form-label">Mot de passe :</label>
         <div class="col-sm-10">
-          <input type="password" class="form-control" id="inputPassword" v-model="this.password">
+          <input type="password" class="form-control"  v-model="this.password">
           <div class="d-flex  mt-2">
             <small class="text-danger" v-if="this.password.length > 1 && this.password.length <8">Le mot de passe doit faire 8 caractères</small>
             <small class="text-danger" v-if="this.password.length > 30">Le mot de passe doit faire moins de 30 caractères</small>
@@ -46,9 +46,9 @@
         </div>
       </div>
       <div class="form-group row mt-2 mb-2">
-        <label for="inputPassword" class="col-sm-2 col-form-label">Confirmation du mot de passe:</label>
+        <label  class="col-sm-2 col-form-label">Confirmation du mot de passe:</label>
         <div class="col-sm-10">
-          <input type="password" class="form-control" id="inputPassword" v-model="this.confirmpassword">
+          <input type="password" class="form-control"  v-model="this.confirmpassword">
           <div class="d-flex flex-column mt-2">
             <small class="text-danger text-left" v-if="this.password !== this.confirmpassword">Le mot de passe n'est pas identique</small>
           </div>
