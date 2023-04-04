@@ -125,6 +125,7 @@ import axios from 'axios';
 import NavBar from './NavBar.vue';
 import mapboxgl from 'mapbox-gl';
 import Footer from './Footer.vue';
+import { inject} from 'vue';
 
 export default {
     name: 'EventPage',
@@ -151,6 +152,7 @@ export default {
             lattitude: "48.6937223",
             marker: null,
             map: null,
+            apiLink : inject('apiLink')
         }
     },
 
@@ -201,7 +203,7 @@ export default {
     methods: {
         async initEvent() {
             try {
-                const link = `http://iut.netlor.fr/event/getEvent/` + this.eid;
+                const link = this.apiLink+`/event/getEvent/` + this.eid;
 
                 const res = await axios.get(link);
 
@@ -255,7 +257,7 @@ export default {
 
         async initParticipants() {
             try {
-                const link = `http://iut.netlor.fr/participants/event/` + this.eid;
+                const link = this.apiLink+`/participants/event/` + this.eid;
 
                 const res = await axios.get(link);
 
@@ -270,7 +272,7 @@ export default {
 
         async initComments() {
             try {
-                const link = `http://iut.netlor.fr/participants/comment/getComment/` + this.eid;
+                const link = this.apiLink+`/participants/comment/getComment/` + this.eid;
 
                 const res = await axios.get(link);
 
@@ -285,7 +287,7 @@ export default {
 
         async initAllParticipants() {
             try {
-                const link = `http://iut.netlor.fr/auth/`;
+                const link = this.apiLink+`/auth/`;
 
                 const res = await axios.get(link, {
                     headers: { Authorization: `Bearer ${this.userToken}` }
@@ -303,7 +305,7 @@ export default {
         async initAuthorInfo(uid) {
             try {
                 const user = await axios
-                    .get(`http://iut.netlor.fr/auth/userId/` + uid);
+                    .get(this.apiLink+`/auth/userId/` + uid);
                 this.authorFirstname = user.data.user.firstname;
                 this.authorName = user.data.user.name;
                 this.authorMail = user.data.user.email;
@@ -316,7 +318,7 @@ export default {
         async initUserInfo(uid) {
             try {
                 const user = await axios
-                    .get(`http://iut.netlor.fr/auth/userId/` + uid);
+                    .get(this.apiLink+`/auth/userId/` + uid);
                 this.userFirstname = user.data.user.firstname;
                 this.userName = user.data.user.name;
             } catch (err) {
@@ -328,7 +330,7 @@ export default {
             try {
                 let uuid = JSON.parse(sessionStorage.getItem('participantsUid'));
                 const participants = await axios
-                    .get(`http://iut.netlor.fr/participants/getParticipant/` + uuid);
+                    .get(this.apiLink+`/participants/getParticipant/` + uuid);
                 this.userFirstname = participants.data.participants[0].firstname;
                 this.userName = participants.data.participants[0].name;
                 this.userUid = participants.data.participants[0].uid;
@@ -340,7 +342,7 @@ export default {
         async sendMessage(message) {
             if (message !== '' && message.length < 257) {
                 try {
-                    const link = ` http://iut.netlor.fr/Participants/comment/add`;
+                    const link = this.apiLink+`/Participants/comment/add`;
 
                     await axios
                         .post(link, {
@@ -364,7 +366,7 @@ export default {
         async addParticipant() {
             if (this.newParticipant !== '') {
                 try {
-                    const link = ` http://iut.netlor.fr/participants/add`;
+                    const link = this.apiLink+`/participants/add`;
 
                     await axios
                         .post(link, {
@@ -385,7 +387,7 @@ export default {
 
         async acceptEvent() {
             try {
-                const link = `http://iut.netlor.fr/Participants/accept`;
+                const link = this.apiLink+`/Participants/accept`;
                 await axios
                     .put(link, {
                         uid: this.userUid,
@@ -408,7 +410,7 @@ export default {
 
         async deniedEvent() {
             try {
-                const link = `http://iut.netlor.fr/Participants/accept`;
+                const link = this.apiLink+`/Participants/accept`;
 
                 await axios
                     .put(link, {

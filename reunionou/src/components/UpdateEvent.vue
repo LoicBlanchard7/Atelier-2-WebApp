@@ -66,6 +66,8 @@ import mapboxgl from 'mapbox-gl';
 import NavBar from './NavBar.vue';
 import Footer from './Footer.vue';
 import MapboxClient from '@mapbox/mapbox-sdk/services/geocoding';
+import { inject } from 'vue';
+
 
 export default {
     name: 'UpdateEvent',
@@ -88,6 +90,7 @@ export default {
             posX: '',
             posY: '',
             uid: '',
+            apiLink : inject('apiLink'),
         };
     },
 
@@ -97,7 +100,7 @@ export default {
         this.uid = acc.uid;
 
         try {
-            const link = `http://iut.netlor.fr/event/getEvent/` + this.eid;
+            const link = this.apiLink+`/event/getEvent/` + this.eid;
 
             const res = await axios.get(link, {
                 headers: { Authorization: `Bearer ${this.token}` }
@@ -169,7 +172,7 @@ export default {
             if (this.title != '' && this.description != '' && this.posX != '' && this.posY != '' && this.date != '' && this.time != '') {
                 try {
                     await axios
-                        .put(`http://iut.netlor.fr/event/updateEvent`, {
+                        .put(this.apiLink+`/event/updateEvent`, {
                             title: this.title,
                             description: this.description,
                             date: this.date.toString() + " " + this.time.toString(),

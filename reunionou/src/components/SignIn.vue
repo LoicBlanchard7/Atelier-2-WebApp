@@ -43,6 +43,8 @@ import axios from 'axios';
 import { mapState } from 'vuex';
 import NavBar from './NavBar.vue';
 import Footer from './Footer.vue';
+import { inject} from 'vue';
+
 export default {
     name: 'SignIn',
     components: {NavBar,Footer},
@@ -51,6 +53,7 @@ export default {
             email: '',
             password: '',
             errorMessage: '',
+            apiLink : inject('apiLink')
         }
     },
     computed: {
@@ -73,7 +76,7 @@ export default {
             }
             try {
                 const user = await axios
-                    .post(`http://iut.netlor.fr/auth/signin`, {
+                    .post(this.apiLink+`/auth/signin`, {
                         email: this.email,
                         password: this.password
                     });

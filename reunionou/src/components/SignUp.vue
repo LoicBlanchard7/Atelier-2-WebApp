@@ -73,6 +73,8 @@
 import axios from "axios";
 import NavBar from './NavBar.vue';
 import Footer from './Footer.vue';
+import { inject} from 'vue';
+
 export default {
     name: 'SignUp',
     components: { NavBar, Footer },
@@ -82,7 +84,8 @@ export default {
             firstname: '',
             email: '',
             password: '',
-            errorMessage: ''
+            errorMessage: '',
+            apiLink : inject('apiLink')
         };
     },
     computed: {
@@ -105,13 +108,13 @@ export default {
                     this.errorMessage = 'Veuillez remplir tous les champs.';
                     return;
                 } else {
-                    axios.post(`http://iut.netlor.fr/auth/signup`, {
+                    axios.post(this.apiLink+`/auth/signup`, {
                         name: this.name,
                         firstname: this.firstname,
                         email: this.email,
                         password: this.password
-                    }).then(response => {
-                        console.log(response.data);
+                    }).then(() => {
+
                         this.resetForm();
                         this.errorMessage = '';
                         this.$store.commit('newAccount', 'Votre compte a bien été créé. Vous pouvez maintenant vous connecter.');

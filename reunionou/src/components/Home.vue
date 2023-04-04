@@ -65,6 +65,8 @@
 import NavBar from './NavBar.vue';
 import axios from 'axios';
 import Footer from './Footer.vue';
+import { inject} from 'vue';
+
 export default {
     name: 'HomePage',
     components: { NavBar, Footer },
@@ -78,7 +80,7 @@ export default {
             eventCreatedByUser: [],
             eventParticipate: [],
             eventPending: [],
-
+            apiLink : inject('apiLink')
         }
     },
     computed: {
@@ -150,7 +152,7 @@ export default {
     methods: {
         async GetEventData() {
             try {
-                const link = "http://iut.netlor.fr/Participants/user/" + this.userUid;
+                const link = this.apiLink+"/Participants/user/" + this.userUid;
 
                 const res = await axios.get(link, {
                     headers: { Authorization: `Bearer ${this.userToken}` }
@@ -159,7 +161,7 @@ export default {
                 this.events = res.data;
 
 
-                const linkCreatedByUser = "http://iut.netlor.fr/event/getEventByUser/" + this.userUid;
+                const linkCreatedByUser = this.apiLink+"/event/getEventByUser/" + this.userUid;
                 const resCreatedByUser = await axios.get(linkCreatedByUser, {
                     headers: { Authorization: `Bearer ${this.userToken}` }
                 })
@@ -171,6 +173,7 @@ export default {
                     sessionStorage.removeItem('account');
                     this.$router.push({ name: 'SignIn' });
                 }
+                //TODO Gestion d'erreur
             }
         },
 

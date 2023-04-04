@@ -65,6 +65,7 @@
 import NavBar from './NavBar.vue';
 import Footer from './Footer.vue';
 import axios from 'axios';
+import { inject} from 'vue';
 
 export default {
   name: 'ProfilePage',
@@ -80,7 +81,8 @@ export default {
       password: "",
       confirmpassword: "",
       message: "",
-      messagepassword: ""
+      messagepassword: "",
+      apiLink : inject('apiLink')
     }
   },
   computed: {
@@ -102,7 +104,7 @@ export default {
   methods: {
     async getInfoUser() {
       try {
-        const user = await axios.get("http://iut.netlor.fr/auth/userId/" + this.uid);
+        const user = await axios.get(this.apiLink+"/auth/userId/" + this.uid);
         this.email = user.data.user.email;
         this.name = user.data.user.name;
         this.firstname = user.data.user.firstname;
@@ -118,7 +120,7 @@ export default {
             firstname: this.firstname
           };
         try {
-          await axios.put("http://iut.netlor.fr/auth/updateUser/", data);
+          await axios.put(this.apiLink+"/auth/updateUser/", data);
           this.message = "Les modifications ont bien été enregistrées";
         } catch (err) {
           console.log(err);
@@ -134,7 +136,7 @@ export default {
             password: this.password
           }
         try {
-          await axios.put("http://iut.netlor.fr/auth/updateUser/", data);
+          await axios.put(this.apiLink+"/auth/updateUser/", data);
           this.messagepassword = "Le mot de passe a bien été modifié";
           this.password = "";
           this.confirmpassword = "";

@@ -72,6 +72,7 @@ import mapboxgl from 'mapbox-gl';
 import NavBar from './NavBar.vue';
 import Footer from './Footer.vue';
 import MapboxClient from '@mapbox/mapbox-sdk/services/geocoding';
+import { inject} from 'vue';
 
 export default {
     name: 'CreateEvent',
@@ -90,6 +91,7 @@ export default {
             newAccountMessage: '',
             marker: null,
             address: '',
+            apiLink : inject('apiLink')
         };
     },
 
@@ -132,7 +134,7 @@ export default {
 
                 try {
                     await axios
-                        .post(`http://iut.netlor.fr/event/createEvent`, {
+                        .post(this.apiLink+`/event/createEvent`, {
                             title: this.title,
                             description: this.description,
                             date: this.date.toString() + " " + this.time.toString(),

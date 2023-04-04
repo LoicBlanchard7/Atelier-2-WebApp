@@ -37,7 +37,7 @@ import { mapState } from 'vuex';
 import NavBar from './NavBar.vue';
 import Footer from './Footer.vue';
 import { uuid } from 'vue-uuid'; 
-
+import { inject} from 'vue';
 
 export default {
     name: 'SignIn',
@@ -48,6 +48,7 @@ export default {
             name: '',
             firstname: '',
             errorMessage: '',
+            apiLink : inject('apiLink')
         }
     },
     computed: {
@@ -58,7 +59,7 @@ export default {
     methods: {
         async login() {
             try {
-               const link = ` http://iut.netlor.fr/participants/add`;
+               const link = this.apiLink+`/participants/add`;
 
                     await axios
                         .post(link, {
