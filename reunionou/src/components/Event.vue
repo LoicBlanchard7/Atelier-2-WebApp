@@ -446,7 +446,7 @@ export default {
 
         copy() {
             navigator.clipboard.writeText(this.link);
-            alert("Copied the text: " + this.link);
+            alert("Le lien a bien été copiée: " + this.link);
         }
     }
 };
