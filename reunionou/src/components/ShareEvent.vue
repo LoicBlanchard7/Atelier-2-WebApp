@@ -19,6 +19,7 @@
                                 <input type="text" class="form-control" id="password" v-model="firstname" required>
                             </div>
                             <button type="submit" class="btn btn-primary btn-block marginT">Rejoindre l'événement</button>
+                            <p class="errorMessage">{{ this.errorMessage }}</p>
                         </form>
                     </div>
                 </div>
@@ -77,7 +78,6 @@ export default {
                 sessionStorage.setItem('participantsUid', JSON.stringify(this.uuid));
                 this.$router.push({ name: 'Event', params: { id: this.eid } });
             } catch (err) {
-                console.log(err);
                 this.errorMessage = "L'adresse mail ou le mot de passe est incorrecte.";
             }
             this.resetForm();
@@ -105,7 +105,7 @@ export default {
                 userFirstname = user.data.user.firstname;
                 userName = user.data.user.name;
             } catch (err) {
-                console.log(err);
+                this.errorMessage = 'Erreur inconnue';
             }
 
             try {
@@ -121,7 +121,7 @@ export default {
                         headers: { Authorization: `Bearer ${acc.access_token}` }
                     });
             } catch (err) {
-                console.log(err);
+                this.errorMessage = 'Erreur inconnue';
             }
 
             this.$router.push({ name: 'Event', params: { id: this.eid } });

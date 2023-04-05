@@ -60,6 +60,8 @@
       <button type="button" class="btn btn-secondary mt-3 mb-3" @click="this.updatePassword()"
         v-bind:disabled="isValidePassword == false">Modifier le mot de passe</button>
       <p class="newAccountMessage">{{ this.messagepassword }}</p>
+      <p class="errorMessage">{{ this.errorMessage }}</p>
+
     </form>
   </div>
   <Footer />
@@ -85,6 +87,7 @@ export default {
       confirmpassword: "",
       message: "",
       messagepassword: "",
+      errorMessage: "",
       apiLink: inject('apiLink')
     }
   },
@@ -125,7 +128,7 @@ export default {
         this.name = user.data.user.name;
         this.firstname = user.data.user.firstname;
       } catch (err) {
-        console.log(err);
+        this.errorMessage = 'Erreur inconnue';
       }
     },
 
@@ -144,7 +147,7 @@ export default {
           await axios.put(this.apiLink + "/auth/updateUser/", data);
           this.message = "Les modifications ont bien été enregistrées";
         } catch (err) {
-          console.log(err);
+          this.errorMessage = 'Erreur inconnue';
         }
       }
     },
@@ -167,7 +170,7 @@ export default {
           this.password = "";
           this.confirmpassword = "";
         } catch (err) {
-          console.log(err);
+          this.errorMessage = 'Erreur inconnue';
         }
       }
     },

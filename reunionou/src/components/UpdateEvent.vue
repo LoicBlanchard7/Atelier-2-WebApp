@@ -150,7 +150,6 @@ export default {
                 this.$router.push({ name: "Home" });
             }
         } catch (err) {
-            console.log(err);
             this.newAccountMessage = "";
             this.errorMessage = "Une erreur ?";
         }
@@ -216,7 +215,6 @@ export default {
                     this.resetForm();
                     this.$router.push('/');
                 } catch (err) {
-                    console.log(err);
                     this.newAccountMessage = "";
                     this.errorMessage = "Une erreur ?";
                 }
