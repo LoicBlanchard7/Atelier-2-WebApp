@@ -19,6 +19,23 @@
                         <div class="overflow-auto" style="max-height: 6rem;">
                             <p>{{ this.event.description }}</p>
                         </div>
+
+                        <p>
+                            <i v-if="parseFloat(forecastTemperature) < 0" class="bi bi-thermometer-snow"></i>
+                            <i v-else-if="parseFloat(forecastTemperature) >= 0 & parseFloat(forecastTemperature) < 5"
+                                class="bi bi-thermometer"></i>
+                            <i v-else-if="parseFloat(forecastTemperature) >= 5 & parseFloat(forecastTemperature) < 10"
+                                class="bi bi-thermometer-low"></i>
+                            <i v-else-if="parseFloat(forecastTemperature) >= 10 & parseFloat(forecastTemperature) < 15"
+                                class="bi bi-thermometer-half"></i>
+                            <i v-else-if="parseFloat(forecastTemperature) >= 15 & parseFloat(forecastTemperature) < 20"
+                                class="bi bi-thermometer-high"></i>
+                            <i v-else-if="parseFloat(forecastTemperature) >= 20" class="bi bi-thermometer-sun"></i>
+                            <i v-else class="bi bi-thermometer"></i>
+                            :
+                            {{ forecastTemperature }}
+                        </p>
+                        <p> <i class="bi bi-wind"></i> : {{ forecastWindSpeed }}</p>
                     </div>
                 </div>
                 <div class="col-md-6">
@@ -156,7 +173,9 @@ export default {
             map: null,
             cardEventAuthor: "cardEventAuthor",
             cardEventParticipant: "cardEventParticipant",
-            apiLink: inject('apiLink')
+            apiLink: inject('apiLink'),
+            forecastTemperature: '',
+            forecastWindSpeed: '',
         }
     },
 
@@ -238,6 +257,23 @@ export default {
 
                 this.event = res.data.events;
                 this.eventUid = this.event.uid;
+
+                const diffTime = Math.abs(new Date(this.event.date) - new Date());
+                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+                axios.get(`https://api.open-meteo.com/v1/meteofrance?latitude=${this.event.posX}&longitude=${this.event.posY}&date=${this.event.date}&current_weather=true`)
+                    .then(response => {
+                        this.forecastTemperature = response.data.current_weather.temperature + "°";
+                        this.forecastWindSpeed = response.data.current_weather.windspeed + " km/h";
+
+                        if (diffDays > 10) {
+                            this.forecastTemperature += " Prévision peu fiable.";
+                            this.forecastWindSpeed += " Prévision peu fiable.";
+                        }
+                    })
+                    .catch(error => {
+                        console.log(error);
+                    });
 
                 this.initAuthorInfo(this.eventUid);
 
