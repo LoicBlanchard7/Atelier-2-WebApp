@@ -1,5 +1,7 @@
 # reunionou
 
+### Leblanc Lilian / Jarosz Léa / Blanchard Loic / Bourlon Erwan
+
 ## Project setup
 ```
 npm install
