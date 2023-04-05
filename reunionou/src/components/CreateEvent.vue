@@ -144,7 +144,7 @@ export default {
                 let acc = JSON.parse(sessionStorage.getItem('account'));
 
                 try {
-                    await axios
+                    let event = await axios
                         .post(this.apiLink+`/event/createEvent`, {
                             title: this.title,
                             description: this.description,
@@ -155,12 +155,10 @@ export default {
                         }, {
                             headers: { Authorization: `Bearer ${acc.access_token}` }
                         });
-
                     this.errorMessage = '';
                     this.newAccountMessage = "Evènement créé.";
                     this.resetForm();
-
-                    this.$router.push('/');
+                    this.$router.push('/event/' + event.data.eid);
 
                 } catch (err) {
                     console.log(err);
