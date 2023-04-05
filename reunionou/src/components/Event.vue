@@ -199,6 +199,8 @@ export default {
             !this.participants.some(objet2 => objet2.uid === objet1.uid)
             );
 
+            sortAllParticipants = sortAllParticipants.filter(objet => objet.uid !== this.userUid);
+
             return sortAllParticipants;
         },
 
