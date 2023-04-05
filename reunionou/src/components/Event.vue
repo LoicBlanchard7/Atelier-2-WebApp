@@ -10,7 +10,7 @@
                         <p><strong>Auteur -</strong> {{ this.authorName + " " + this.authorFirstname }}</p>
                         <p><strong>Mail -</strong> {{ this.authorMail }}</p>
 
-                        <p class="text-muted">{{ new Date(this.event.date).toLocaleDateString('fr-FR', {
+                        <p class="text-muted">{{ new Date(this.event.date).toLocaleDateString('fr-FR', { timeZone: 'UTC',
                             weekday: "long",
                             year: "numeric", month: "short", day: "numeric", hour: "numeric", minute: "numeric"
                         })
@@ -117,8 +117,8 @@
                                     <strong>Sélection d'un membre</strong>
                                 </div>
                                 <select class="select card-text" size="4" v-model="newParticipant">
-                                    <option v-for="participant in             allParticipants" :key="participant.id"
-                                        :value=participant>
+                                    <option v-for="participant in             this.sortAllParticipants"
+                                        :key="participant.id" :value=participant>
                                         {{ participant.name + " " + participant.firstname }}
                                     </option>
                                 </select>
@@ -193,6 +193,15 @@ export default {
             }
         },
 
+
+        sortAllParticipants() {
+            let sortAllParticipants = this.allParticipants.filter(objet1 =>
+            !this.participants.some(objet2 => objet2.uid === objet1.uid)
+            );
+
+            return sortAllParticipants;
+        },
+
         /**
          * Méthode permettant de récupérer l'id de l'évènement placé en paramètre.
          * @return : L'id de l'évènement placé en paramètre
@@ -235,6 +244,7 @@ export default {
             this.userUid = acc.uid;
             this.initUserInfo(this.userUid);
             this.initAllParticipants();
+
         } else if (participants !== null) {
             this.initParticipantsInfo();
 
@@ -325,7 +335,7 @@ export default {
         },
 
         /**
-         * Méthode permettant d'ajouter tous les participants à la liste des participants invitable.
+         * Méthode permettant d'ajouter les participants invités à l'évènement à la liste des participants invités.
          * @return : vide
          */
         async initParticipants() {
@@ -337,7 +347,6 @@ export default {
                 if (res.data.participants.length > 0) {
                     this.participants = res.data.participants;
                 }
-
             } catch (err) {
                 console.log(err);
             }
@@ -377,6 +386,7 @@ export default {
                 if (res.data.users.length > 0) {
                     this.allParticipants = res.data.users;
                 }
+
 
             } catch (err) {
                 console.log(err);
