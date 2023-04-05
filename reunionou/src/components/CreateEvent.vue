@@ -161,7 +161,6 @@ export default {
                     this.$router.push('/event/' + event.data.eid);
 
                 } catch (err) {
-                    console.log(err);
                     this.newAccountMessage = "";
                     if(err.response.status){
                      
