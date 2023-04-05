@@ -215,7 +215,7 @@ export default {
          * Méthode permettant de renvoyer le lien de partage de l'événement
          * @return : Lien de partage de l'évènement
          */
-        link() { return "http://localhost:8080/partage/event/" + this.eid },
+        link() { return "https://webetu.iutnc.univ-lorraine.fr/www/leblanc71u/atelier2/partage/event/" + this.eid },
     },
 
     /**
