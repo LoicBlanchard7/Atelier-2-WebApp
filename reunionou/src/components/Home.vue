@@ -8,13 +8,13 @@
         </div>
         <div v-else>
             <div class="btn-toolbar justify-content-center m-3 p-1" role="group" aria-label="Basic example">
-                <button type="button" class="btn btn-primary m-1" :disabled="allDisabled"
+                <button type="button" class="btn btn-outline-primary m-1" :disabled="allDisabled"
                     @click="setFilter('Tous')">Tous</button>
-                <button type="button" class="btn btn-primary  m-1" :disabled="toComeDisabled"
+                <button type="button" class="btn btn-outline-primary  m-1" :disabled="toComeDisabled"
                     @click="setFilter('A venir')">A venir</button>
-                <button type="button" class="btn btn-primary  m-1" :disabled="pendingDisabled"
+                <button type="button" class="btn btn-outline-primary  m-1" :disabled="pendingDisabled"
                     @click="setFilter('En attente')">En attente</button>
-                <button type="button" class="btn btn-primary  m-1" :disabled="myEventDisabled"
+                <button type="button" class="btn btn-outline-primary  m-1" :disabled="myEventDisabled"
                     @click="setFilter('Mes évènements')">Mes évènements</button>
             </div>
 
@@ -27,8 +27,8 @@
                             <p class="card-text">{{ event.description }}</p>
 
                             <div class="btn-toolbar justify-content-center m-3 p-1" role="group" aria-label="Basic example">
-                                <button class="btn btn-primary m-1" @click="goToEvent(event.eid)">Consulter</button>
-                                <button class="btn btn-primary m-1" @click="UpdateEvent(event.eid)">Modifier</button>
+                                <button class="btn btn-primary m-1" @click="goToEvent(event.eid)"><i class="bi bi-eye"></i></button>
+                                <button class="btn btn-primary m-1" @click="UpdateEvent(event.eid)"><i class="bi bi-pencil"></i></button>
                             </div>
 
                         </div>
@@ -46,7 +46,7 @@
                             <h5 class="card-title" v-bind:class="showStatus(event.status)">{{ event.event.title }}</h5>
                             <p class="card-text">{{ event.event.description }}</p>
                             <p class="card-text">Créateur : {{ event.creator }}</p>
-                            <button class="btn btn-primary" @click="goToEvent(event.event.eid)">Consulter</button>
+                            <button class="btn btn-primary" @click="goToEvent(event.event.eid)"><i class="bi bi-eye"></i></button>
                         </div>
                         <div class="card-footer"><small class="text-muted">{{ new
                             Date(event.event.date).toLocaleDateString('fr-FR', {
