@@ -282,7 +282,11 @@ export default {
                         }
                     })
                     .catch(error => {
-                        console.log(error);
+                        if (error.response.status === 401) {
+                            this.$store.commit('deconnect', 'Votre session a expiré, veuillez vous reconnecter.');
+                            sessionStorage.removeItem('account');
+                            this.$router.push({ name: 'SignIn' });
+                        }
                     });
 
                 this.initAuthorInfo(this.eventUid);
@@ -348,7 +352,11 @@ export default {
                     this.participants = res.data.participants;
                 }
             } catch (err) {
-                console.log(err);
+                if (err.response.status === 401) {
+                    this.$store.commit('deconnect', 'Votre session a expiré, veuillez vous reconnecter.');
+                    sessionStorage.removeItem('account');
+                    this.$router.push({ name: 'SignIn' });
+                }
             }
         },
 
@@ -367,7 +375,11 @@ export default {
                 }
 
             } catch (err) {
-                console.log(err);
+               if (err.response.status === 401) {
+                    this.$store.commit('deconnect', 'Votre session a expiré, veuillez vous reconnecter.');
+                    sessionStorage.removeItem('account');
+                    this.$router.push({ name: 'SignIn' });
+                }
             }
         },
 
@@ -389,7 +401,11 @@ export default {
 
 
             } catch (err) {
-                console.log(err);
+               if (err.response.status === 401) {
+                    this.$store.commit('deconnect', 'Votre session a expiré, veuillez vous reconnecter.');
+                    sessionStorage.removeItem('account');
+                    this.$router.push({ name: 'SignIn' });
+                }
             }
         },
 
@@ -407,7 +423,11 @@ export default {
                 this.authorMail = user.data.user.email;
 
             } catch (err) {
-                console.log(err);
+               if (err.response.status === 401) {
+                    this.$store.commit('deconnect', 'Votre session a expiré, veuillez vous reconnecter.');
+                    sessionStorage.removeItem('account');
+                    this.$router.push({ name: 'SignIn' });
+                }
             }
         },
 
@@ -423,7 +443,11 @@ export default {
                 this.userFirstname = user.data.user.firstname;
                 this.userName = user.data.user.name;
             } catch (err) {
-                console.log(err);
+               if (err.response.status === 401) {
+                    this.$store.commit('deconnect', 'Votre session a expiré, veuillez vous reconnecter.');
+                    sessionStorage.removeItem('account');
+                    this.$router.push({ name: 'SignIn' });
+                }
             }
         },
 
@@ -440,7 +464,11 @@ export default {
                 this.userName = participants.data.participants[0].name;
                 this.userUid = participants.data.participants[0].uid;
             } catch (err) {
-                console.log(err);
+                if (err.response.status === 401) {
+                    this.$store.commit('deconnect', 'Votre session a expiré, veuillez vous reconnecter.');
+                    sessionStorage.removeItem('account');
+                    this.$router.push({ name: 'SignIn' });
+                }
             }
         },
 
@@ -468,7 +496,11 @@ export default {
                     this.initComments();
 
                 } catch (err) {
-                    console.log(err);
+                    if (err.response.status === 401) {
+                    this.$store.commit('deconnect', 'Votre session a expiré, veuillez vous reconnecter.');
+                    sessionStorage.removeItem('account');
+                    this.$router.push({ name: 'SignIn' });
+                }
                 }
             }
         },
@@ -494,7 +526,11 @@ export default {
 
                     this.initParticipants();
                 } catch (err) {
-                    console.log(err);
+                   if (err.response.status === 401) {
+                    this.$store.commit('deconnect', 'Votre session a expiré, veuillez vous reconnecter.');
+                    sessionStorage.removeItem('account');
+                    this.$router.push({ name: 'SignIn' });
+                }
                 }
             }
         },
@@ -517,7 +553,11 @@ export default {
 
                 this.initParticipants();
             } catch (err) {
-                console.log(err);
+               if (err.response.status === 401) {
+                    this.$store.commit('deconnect', 'Votre session a expiré, veuillez vous reconnecter.');
+                    sessionStorage.removeItem('account');
+                    this.$router.push({ name: 'SignIn' });
+                }
             }
 
             if (this.acceptMessage != '') {
@@ -545,7 +585,11 @@ export default {
 
                 this.initParticipants();
             } catch (err) {
-                console.log(err);
+                if (err.response.status === 401) {
+                    this.$store.commit('deconnect', 'Votre session a expiré, veuillez vous reconnecter.');
+                    sessionStorage.removeItem('account');
+                    this.$router.push({ name: 'SignIn' });
+                }
             }
 
             if (this.acceptMessage != '') {
@@ -560,8 +604,8 @@ export default {
          * Affiche une alerte dans le navigateur lors de la copie.
          * @return : vide
          */
-        copy() {
-            navigator.clipboard.writeText(this.link);
+        async copy() {
+            await navigator.clipboard.writeText(this.link);
             alert("Le lien a bien été copiée: " + this.link);
         }
     }

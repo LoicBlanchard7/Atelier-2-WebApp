@@ -35,7 +35,8 @@ const routes = [
 ];
 
 const router = createRouter({
-    history: createWebHistory(),
+    history: createWebHistory("/www/leblanc71u/atelier2"),
+    base: "/www/leblanc71u/atelier2",
     routes,
 });
 

@@ -4,7 +4,7 @@
     <div class="container">
         <div v-if="!isConnected">
             <h3>Réunionou</h3>
-            <p>Bienvenue sur Réunionnou, veuillez vous connecté.</p>
+            <p class="homeText">Bienvenue sur Réunionou, veuillez vous connecter.</p>
         </div>
         <div v-else>
             <div class="btn-toolbar justify-content-center m-3 p-1" role="group" aria-label="Basic example">

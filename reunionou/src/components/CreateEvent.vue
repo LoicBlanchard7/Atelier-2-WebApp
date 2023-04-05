@@ -141,9 +141,9 @@ export default {
          */
         async createEvent() {
             if (this.title != '' && this.description != '' && this.lattitude != null && this.longitude != null && this.date != '' && this.time != '' && this.description.length < 257 && this.title.length < 129) {
-                let acc = JSON.parse(sessionStorage.getItem('account'));
 
                 try {
+                    let acc = JSON.parse(sessionStorage.getItem('account'));
                     let event = await axios
                         .post(this.apiLink+`/event/createEvent`, {
                             title: this.title,
@@ -163,7 +163,20 @@ export default {
                 } catch (err) {
                     console.log(err);
                     this.newAccountMessage = "";
-                    this.errorMessage = "Une erreur ?";
+                    if(err.response.status){
+                     
+                        if(err.response.status == 401){
+                            this.$store.commit('deconnect', 'Votre session a expiré, veuillez vous reconnecter.');
+                            sessionStorage.removeItem('account');
+                            this.$router.push({ name: 'SignIn' });
+                        }else if (err.response.status == 400) {
+                            this.errorMessage = "Erreur sur les données entrées.";
+                        }else{
+                            this.errorMessage = "Erreur inconnue.";
+                        }
+                    }else{
+                        this.errorMessage = "Erreur inconnue.";
+                    }
                 }
             } else {
                 this.newAccountMessage = '';
