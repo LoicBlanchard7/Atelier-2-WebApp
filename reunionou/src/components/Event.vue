@@ -10,7 +10,7 @@
                         <p><strong>Auteur -</strong> {{ this.authorName + " " + this.authorFirstname }}</p>
                         <p><strong>Mail -</strong> {{ this.authorMail }}</p>
 
-                        <p class="text-muted">{{ new Date(this.event.date).toLocaleDateString('fr-FR', {
+                        <p class="text-muted">{{ new Date(this.event.date).toLocaleDateString('fr-FR', { timeZone: 'UTC',
                             weekday: "long",
                             year: "numeric", month: "short", day: "numeric", hour: "numeric", minute: "numeric"
                         })
@@ -201,8 +201,6 @@ export default {
 
             return sortAllParticipants;
         },
-
-
 
         /**
          * Méthode permettant de récupérer l'id de l'évènement placé en paramètre.
