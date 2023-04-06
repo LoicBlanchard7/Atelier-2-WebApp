@@ -145,13 +145,15 @@ export default {
                 this.map.on('click', (event) => {
                     const { lng, lat } = event.lngLat;
                     this.marker.setLngLat([lng, lat]).addTo(this.map);
+                    this.posXEvent = lat;
+                    this.posYEvent = lng;
                 });
             } else {
                 this.$router.push({ name: "Home" });
             }
         } catch (err) {
             this.newAccountMessage = "";
-            this.errorMessage = "Une erreur ?";
+            this.errorMessage = "Une erreur est survenue.";
         }
     },
 
@@ -211,7 +213,7 @@ export default {
                         });
 
                     this.errorMessage = '';
-                    this.newAccountMessage = "Evènement modifié.";
+                    this.newAccountMessage = "Évènement modifié.";
                     this.resetForm();
                     this.$router.push('/');
                 } catch (err) {

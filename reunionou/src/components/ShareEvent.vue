@@ -78,7 +78,7 @@ export default {
                 sessionStorage.setItem('participantsUid', JSON.stringify(this.uuid));
                 this.$router.push({ name: 'Event', params: { id: this.eid } });
             } catch (err) {
-                this.errorMessage = "L'adresse mail ou le mot de passe est incorrecte.";
+                this.errorMessage = "L'adresse mail ou le mot de passe est incorrect.";
             }
             this.resetForm();
         },

@@ -50,7 +50,7 @@
                     <div class="col-md-12">
                         <div class="card width100" style="max-height: 20rem; min-height: 20rem;">
                             <div class="card-header">
-                                <strong>Chat</strong>
+                                <strong>Commentaires</strong>
                             </div>
                             <div class="card-body overflow-auto text-right">
                                 <div v-for="comment in comments" :key="comment.id">

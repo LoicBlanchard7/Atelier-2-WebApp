@@ -103,7 +103,7 @@ export default {
                 sessionStorage.setItem('account', JSON.stringify(user.data));
                 this.$router.push({ name: 'Home' });
             } catch (err) {
-                this.errorMessage = "L'adresse mail ou le mot de passe est incorrecte.";
+                this.errorMessage = "L'adresse mail ou le mot de passe est incorrect.";
             }
             this.resetForm();
         },

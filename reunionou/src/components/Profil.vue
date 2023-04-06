@@ -1,7 +1,7 @@
 <template>
   <NavBar />
   <div class="container">
-    <h3 class="m-3">Information du profil</h3>
+    <h3 class="m-3">Informations du profil</h3>
     <form>
       <div class="form-group row mt-2 mb-2">
         <label for="staticEmail" class="col-sm-2 col-form-label">Email</label>
@@ -41,7 +41,7 @@
           <input type="password" class="form-control" v-model="this.password">
           <div class="d-flex  mt-2">
             <small class="text-danger" v-if="this.password.length > 1 && this.password.length < 8">Le mot de passe doit
-              faire 8 caractères</small>
+              faire au minimum 8 caractères</small>
             <small class="text-danger" v-if="this.password.length > 30">Le mot de passe doit faire moins de 30
               caractères</small>
           </div>
